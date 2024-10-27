@@ -4,9 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Mecanum Viper Slide")
 public class MecanumDriveViperSlide extends OpMode {
+
+    // Setup Servos
+    //    Claw Expansion Hub 1 "claw"
+    //    Wrist Expansion Hub 0 "wrist"
+    Servo wrist  = null;
+    Servo claw = null;
 
     DcMotor frontLeftMotor = null;
     DcMotor backLeftMotor = null;
@@ -18,9 +25,21 @@ public class MecanumDriveViperSlide extends OpMode {
     final double ARM_POWER = 1d;
     final double VIPER_SLIDE_POWER = 0.5d;
 
+    // TODO: CREATE CONSTANTS FOR POSITIONS FOR SERVOS
+    final double CLAW_CLOSED = 0d;
+    final double CLAW_OPEN = 0.3d;
+
+    final double WRIST_IN = 1d;
+    final double WRIST_OUT = 0.5d;
+    final double WRIST_MOVE = 0.1d;
+
     @Override
     public void init() {
-        // initializing hardware
+        // initializing servos
+         wrist = hardwareMap.get(Servo .class, "wrist");
+         claw = hardwareMap.get(Servo .class, "claw");
+
+         // initializing motors
          frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
          backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
          frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
@@ -37,6 +56,10 @@ public class MecanumDriveViperSlide extends OpMode {
 
          frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
          backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+         // TODO: Set servos initial position
+        wrist.setPosition(WRIST_IN);
+        claw.setPosition(CLAW_CLOSED);
     }
 
     @Override
@@ -74,8 +97,20 @@ public class MecanumDriveViperSlide extends OpMode {
         frontRightMotor.setPower(frontRightPower);
         backRightMotor.setPower(backRightPower);
 
+        // SERVOS
+        // CLAW - Open A Close B
+        // WRIST - Open X - Close Y (Increment by CONSTANT
 
+        // TODO: Handle servo controls with gamepad
+        if(gamepad2.a)
+            claw.setPosition(CLAW_OPEN);
+        else if(gamepad2.b)
+            claw.setPosition(CLAW_CLOSED);
 
+        if(gamepad2.x)
+            wrist.setPosition(WRIST_OUT);
+        else if (gamepad2.y)
+            wrist.setPosition(WRIST_IN);
 
 
     }
