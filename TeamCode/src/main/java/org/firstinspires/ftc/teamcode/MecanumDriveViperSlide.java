@@ -30,6 +30,11 @@ public class MecanumDriveViperSlide extends OpMode {
 
          // set behavior flags for hardware
          armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
          frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
          backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
