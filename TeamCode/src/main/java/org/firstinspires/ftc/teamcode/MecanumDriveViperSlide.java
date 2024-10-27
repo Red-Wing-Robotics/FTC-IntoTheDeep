@@ -15,7 +15,7 @@ public class MecanumDriveViperSlide extends OpMode {
     public DcMotor viperSlideMotor = null;
     public DcMotor armMotor = null;
 
-    final double ARM_POWER = 0.5d;
+    final double ARM_POWER = 1d;
     final double VIPER_SLIDE_POWER = 0.5d;
 
     @Override
