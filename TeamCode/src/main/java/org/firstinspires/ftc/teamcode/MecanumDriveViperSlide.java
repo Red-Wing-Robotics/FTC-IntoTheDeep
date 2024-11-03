@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -30,11 +31,11 @@ public class MecanumDriveViperSlide extends OpMode {
     final double CLAW_CLOSED = 0d;
     final double CLAW_OPEN = 0.3d;
 
-    final double WRIST_IN = 1d;
-    final double WRIST_OUT = 0.5d;
+    final double WRIST_IN = 0.5d; //Controlled by y
+    final double WRIST_OUT = 0.75d; //Controlled by x
     final double WRIST_MOVE = 0.1d;
 
-    final double INTAKE_IN = 1d;
+    final double INTAKE_IN = -1d;
     final double INTAKE_OUT = -INTAKE_IN;
 
     @Override
@@ -110,7 +111,7 @@ public class MecanumDriveViperSlide extends OpMode {
         // TODO: Handle servo controls with gamepad
         if(gamepad2.dpad_down)
             activeIntake.setPower(INTAKE_IN);
-        else if(gamepad2.dpad.up)
+        else if(gamepad2.dpad_up)
             activeIntake.setPower(INTAKE_OUT);
         else
             activeIntake.setPower(0);
