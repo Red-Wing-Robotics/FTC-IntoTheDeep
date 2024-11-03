@@ -29,7 +29,8 @@ Once this script runs, you should see the device connected. You should also see 
 To connect to the Control Hub on a Windows machine, run the following commands:
 
 ```bash
-cd "c:\Users\cttea\AppData\Local\Android\sdk\platform-tools\"
+cd %HOMEPATH%
+cd "AppData\Local\Android\sdk\platform-tools\"
 adb connect 192.168.43.1
 adb devices
 ```
