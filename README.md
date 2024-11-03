@@ -6,3 +6,4 @@ A first year FTC Robotics team from Chattanooga, TN.
 - Coach Matt
 - Kaden Tucker
 - Sam Thompson
+- Luke Rainer
