@@ -14,6 +14,7 @@ public class MecanumDriveViperSlide extends OpMode {
     //    Wrist Expansion Hub 0 "wrist"
     Servo wrist  = null;
     Servo claw = null;
+    CRServo activeIntake = null;
 
     DcMotor frontLeftMotor = null;
     DcMotor backLeftMotor = null;
@@ -33,11 +34,15 @@ public class MecanumDriveViperSlide extends OpMode {
     final double WRIST_OUT = 0.5d;
     final double WRIST_MOVE = 0.1d;
 
+    final double INTAKE_IN = 1d;
+    final double INTAKE_OUT = -INTAKE_IN;
+
     @Override
     public void init() {
         // initializing servos
          wrist = hardwareMap.get(Servo .class, "wrist");
          claw = hardwareMap.get(Servo .class, "claw");
+         activeIntake = hardwareMap.get(CRServo .class, "active intake");
 
          // initializing motors
          frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
@@ -60,6 +65,7 @@ public class MecanumDriveViperSlide extends OpMode {
          // TODO: Set servos initial position
         wrist.setPosition(WRIST_IN);
         claw.setPosition(CLAW_CLOSED);
+        activeIntake.setPower(0);
     }
 
     @Override
@@ -102,6 +108,13 @@ public class MecanumDriveViperSlide extends OpMode {
         // WRIST - Open X - Close Y (Increment by CONSTANT
 
         // TODO: Handle servo controls with gamepad
+        if(gamepad2.dpad_down)
+            activeIntake.setPower(INTAKE_IN);
+        else if(gamepad2.dpad.up)
+            activeIntake.setPower(INTAKE_OUT);
+        else
+            activeIntake.setPower(0);
+            
         if(gamepad2.a)
             claw.setPosition(CLAW_OPEN);
         else if(gamepad2.b)
