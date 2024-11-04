@@ -23,9 +23,21 @@ public class MecanumDriveViperSlide extends OpMode {
     DcMotor backRightMotor = null;
     public DcMotor viperSlideMotor = null;
     public DcMotor armMotor = null;
+    DcMotor armMotor2 = null;
 
     final double ARM_POWER = 1d;
     final double VIPER_SLIDE_POWER = 0.5d;
+
+    final double ARM_TICKS_PER_DEGREE = 19.7924893140647; // taken from GoBilda for test arm
+    final double TEST1 = 0 * ARM_TICKS_PER_DEGREE; // first test position
+    final double TEST2 = 90 * ARM_TICKS_PER_DEGREE; // second test position
+    final double[] ARM_POSITIONS = {TEST1, TEST2}; // test array to cycle through
+    double armPos = 0; // creating and initializing the variable which the arm motor position will be set to
+    int armPosIdx = 0; // variable to track what index of ARM_POSITIONS is being used
+
+    // variables telling whether or not the arm can be moved foreward or backward
+    boolean armForward = true;
+    boolean armBackward = true; 
 
     // TODO: CREATE CONSTANTS FOR POSITIONS FOR SERVOS
     final double CLAW_CLOSED = 0d;
@@ -52,6 +64,7 @@ public class MecanumDriveViperSlide extends OpMode {
          backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
          viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlideMotor");
          armMotor = hardwareMap.get(DcMotor.class, "left_arm");
+         armMotor2 = hardwareMap.get(DcMotor.class, "arm2"); // the 2 outlet in the expansion hub will be the test motor
 
          // set behavior flags for hardware
          armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -63,6 +76,11 @@ public class MecanumDriveViperSlide extends OpMode {
          frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
          backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+         // Setting up the test arm motor to RUN_TO_POSITION
+         armMotor2.setTargetPosition(0);
+         armMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
          // TODO: Set servos initial position
         wrist.setPosition(WRIST_IN);
         claw.setPosition(CLAW_CLOSED);
@@ -72,12 +90,46 @@ public class MecanumDriveViperSlide extends OpMode {
     @Override
     public void loop() {
 
+        
+        /* commented out for testing
         if(gamepad1.dpad_up)
             armMotor.setPower(ARM_POWER);
         else if (gamepad1.dpad_down)
             armMotor.setPower(ARM_POWER * -1);
         else
-            armMotor.setPower(0);
+            armMotor.setPower(0); */
+
+        // test arm movements
+        if(gamepad1.dpad_up && armForward)
+            {
+                armForward = false;
+                armBackward = true;
+                armPosIdx = armPosIdx - 1; 
+                
+                // added to account for setting armPosIdx to -1
+                if(armPosIdx < 0)
+                    armPosIdx = ARM_POSITIONS.length - 1;
+            }
+        else if(gamepad1.dpad_down && armBackward)
+            {
+                armForward = true;
+                armBackward = false;
+                armPosIdx = (armPosIdx + 1) % ARM_POSITIONS.length;
+            }
+        else
+            {
+                armBackward = true;
+                armForward = true;
+            }
+
+        armPos = ARM_POSITIONS[ armPosIdx ];
+
+        armMotor2.setTargetPosition((int)armPos);
+        
+        // copied from Go Bilda starter code, not sure if it is necessary 
+        ((DcMotorEx) armMotor2).setVelocity(2100);
+        armMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         if(gamepad1.x)
             viperSlideMotor.setPower(VIPER_SLIDE_POWER);
