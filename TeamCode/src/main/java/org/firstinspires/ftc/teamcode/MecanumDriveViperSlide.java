@@ -100,7 +100,7 @@ public class MecanumDriveViperSlide extends OpMode {
             armMotor.setPower(0); */
 
         // test arm movements
-        if(gamepad1.dpad_up && armForward)
+        if(gamepad1.dpad_up && armForward && !gamepad1.dpad_down)
             {
                 armForward = false;
                 armBackward = true;
@@ -110,13 +110,13 @@ public class MecanumDriveViperSlide extends OpMode {
                 if(armPosIdx < 0)
                     armPosIdx = ARM_POSITIONS.length - 1;
             }
-        else if(gamepad1.dpad_down && armBackward)
+        else if(gamepad1.dpad_down && armBackward && !gamepad1.dpad_up)
             {
                 armForward = true;
                 armBackward = false;
                 armPosIdx = (armPosIdx + 1) % ARM_POSITIONS.length;
             }
-        else
+        else if( !gamepad1.dpad_up && !gamepad1.dpad_down )
             {
                 armBackward = true;
                 armForward = true;
