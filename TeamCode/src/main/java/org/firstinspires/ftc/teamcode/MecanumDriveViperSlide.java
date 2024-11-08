@@ -78,7 +78,6 @@ public class MecanumDriveViperSlide extends OpMode {
 
          // Setting up the test arm motor to RUN_USING_ENCODER
          armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-         armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
          // TODO: Set servos initial position
         wrist.setPosition(WRIST_IN);
