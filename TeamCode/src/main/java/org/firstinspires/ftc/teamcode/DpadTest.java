@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Mecanum Viper Slide")
-public class MecanumDriveViperSlide extends OpMode{
+@TeleOp(name = "DpadTest")
+public class DpadTest extends OpMode{
     @Override
     public void init() {}
     @Override
