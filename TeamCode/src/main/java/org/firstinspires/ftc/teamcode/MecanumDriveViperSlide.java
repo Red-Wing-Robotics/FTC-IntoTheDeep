@@ -4,11 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @TeleOp(name = "Mecanum Viper Slide")
 public class MecanumDriveViperSlide extends OpMode {
@@ -33,12 +30,12 @@ public class MecanumDriveViperSlide extends OpMode {
 
     final double ARM_TICKS_PER_DEGREE = 19.7924893140647; // taken from Go Bilda for test arm
     final double TEST1 = 0 * ARM_TICKS_PER_DEGREE; // first test position
-    final double TEST2 = 359 * ARM_TICKS_PER_DEGREE; // second test position
+    final double TEST2 = 90 * ARM_TICKS_PER_DEGREE; // second test position
     final double[] ARM_POSITIONS = {TEST1, TEST2}; // test array to cycle through
     double armPos = 0; // creating and initializing the variable which the arm motor position will be set to
     int armPosIdx = 0; // variable to track what index of ARM_POSITIONS is being used
 
-    // variables telling whether or not the arm can be moved foreward or backward
+    // variables telling whether or not the arm can be moved forward or backward
     boolean armForward = true;
     boolean armBackward = true; 
 
@@ -79,11 +76,8 @@ public class MecanumDriveViperSlide extends OpMode {
          frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
          backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-         // Setting up the test arm motor to RUN_TO_POSITION
-
-         ((DcMotorEx) armMotor2).setCurrentAlert(5, CurrentUnit.AMPS);
-         armMotor2.setTargetPosition(0);
-         armMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         // Setting up the test arm motor to RUN_USING_ENCODER
+         armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
          armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
          // TODO: Set servos initial position
@@ -130,10 +124,11 @@ public class MecanumDriveViperSlide extends OpMode {
         armPos = ARM_POSITIONS[ armPosIdx ];
 
         armMotor2.setTargetPosition((int)armPos);
-        
-        // copied from Go Bilda starter code, not sure if it is necessary 
-        ((DcMotorEx) armMotor2).setVelocity(2100);
+        armMotor2.setPower( 0.8 );
         armMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        telemetry.addData( "Arm Motor Position", armMotor2.getCurrentPosition() / ARM_TICKS_PER_DEGREE);
+        telemetry.update();
 
 
         if(gamepad1.x)
