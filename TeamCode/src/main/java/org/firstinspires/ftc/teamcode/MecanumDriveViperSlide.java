@@ -80,6 +80,7 @@ public class MecanumDriveViperSlide extends OpMode {
          backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
          // Setting up the test arm motor to RUN_TO_POSITION
+
          ((DcMotorEx) armMotor2).setCurrentAlert(5, CurrentUnit.AMPS);
          armMotor2.setTargetPosition(0);
          armMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
