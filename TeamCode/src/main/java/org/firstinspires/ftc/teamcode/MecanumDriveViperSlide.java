@@ -4,8 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @TeleOp(name = "Mecanum Viper Slide")
 public class MecanumDriveViperSlide extends OpMode {
@@ -28,9 +31,9 @@ public class MecanumDriveViperSlide extends OpMode {
     final double ARM_POWER = 1d;
     final double VIPER_SLIDE_POWER = 0.5d;
 
-    final double ARM_TICKS_PER_DEGREE = 19.7924893140647; // taken from GoBilda for test arm
+    final double ARM_TICKS_PER_DEGREE = 19.7924893140647; // taken from Go Bilda for test arm
     final double TEST1 = 0 * ARM_TICKS_PER_DEGREE; // first test position
-    final double TEST2 = 90 * ARM_TICKS_PER_DEGREE; // second test position
+    final double TEST2 = 359 * ARM_TICKS_PER_DEGREE; // second test position
     final double[] ARM_POSITIONS = {TEST1, TEST2}; // test array to cycle through
     double armPos = 0; // creating and initializing the variable which the arm motor position will be set to
     int armPosIdx = 0; // variable to track what index of ARM_POSITIONS is being used
@@ -77,6 +80,7 @@ public class MecanumDriveViperSlide extends OpMode {
          backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
          // Setting up the test arm motor to RUN_TO_POSITION
+         ((DcMotorEx) armMotor2).setCurrentAlert(5, CurrentUnit.AMPS);
          armMotor2.setTargetPosition(0);
          armMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
          armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
