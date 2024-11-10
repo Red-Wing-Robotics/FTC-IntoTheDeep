@@ -48,7 +48,7 @@ public class MecanumDriveViperSlide extends OpMode {
     final double CLAW_OPEN = 0.3d;
 
     final double WRIST_IN = 0.5d; //Controlled by y
-    final double WRIST_OUT = 0.85d; //Controlled by x
+    final double WRIST_OUT = 0.85d; //controlled by x
     final double WRIST_MOVE = 0.1d;
 
     final double INTAKE_IN = -1d;
