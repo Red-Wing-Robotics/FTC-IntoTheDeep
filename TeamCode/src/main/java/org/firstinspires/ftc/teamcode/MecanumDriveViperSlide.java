@@ -27,15 +27,18 @@ public class MecanumDriveViperSlide extends OpMode {
 
     final double ARM_POWER = 1d;
     final double VIPER_SLIDE_POWER = 0.5d;
+    //viper slide positions low basket: 0;
+    final double ARM_TICKS_PER_DEGREE = 7.46805555555; // taken from GoBilda for test arm
+    final double ORIGIN = 0 * ARM_TICKS_PER_DEGREE;
 
-    final double ARM_TICKS_PER_DEGREE = 19.7924893140647; // taken from Go Bilda for test arm
-    final double TEST1 = 0 * ARM_TICKS_PER_DEGREE; // first test position
-    final double TEST2 = 90 * ARM_TICKS_PER_DEGREE; // second test position
-    final double[] ARM_POSITIONS = {TEST1, TEST2}; // test array to cycle through
+    final double SUBMERSIBLE = 20 * ARM_TICKS_PER_DEGREE;
+    final double HIGH_CLIP = 80 * ARM_TICKS_PER_DEGREE;
+    final double HIGH_BASKET = 100 * ARM_TICKS_PER_DEGREE;
+    final double[] ARM_POSITIONS = {ORIGIN, SUBMERSIBLE, HIGH_CLIP, HIGH_BASKET}; // test array to cycle through
     double armPos = 0; // creating and initializing the variable which the arm motor position will be set to
     int armPosIdx = 0; // variable to track what index of ARM_POSITIONS is being used
 
-    // variables telling whether or not the arm can be moved forward or backward
+    // variables telling whether or not the arm can be moved foreward or backward
     boolean armForward = true;
     boolean armBackward = true; 
 
@@ -76,8 +79,9 @@ public class MecanumDriveViperSlide extends OpMode {
          frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
          backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-         // Setting up the test arm motor to RUN_USING_ENCODER
+         // Setting up the test arm motor to RUN_TO_POSITION
          armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
          // TODO: Set servos initial position
         wrist.setPosition(WRIST_IN);
@@ -123,12 +127,10 @@ public class MecanumDriveViperSlide extends OpMode {
         armPos = ARM_POSITIONS[ armPosIdx ];
 
         armMotor2.setTargetPosition((int)armPos);
-        armMotor2.setPower( 0.8 );
+        armMotor2.setPower(0.3);
         armMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData( "Arm Motor Position", armMotor2.getCurrentPosition() / ARM_TICKS_PER_DEGREE);
-        telemetry.update();
-
 
         if(gamepad1.x)
             viperSlideMotor.setPower(VIPER_SLIDE_POWER);
@@ -136,6 +138,9 @@ public class MecanumDriveViperSlide extends OpMode {
             viperSlideMotor.setPower(VIPER_SLIDE_POWER * -1);
         else
             viperSlideMotor.setPower(0);
+
+        telemetry.addData( "Viper Slide Motor Position", viperSlideMotor.getCurrentPosition());
+        telemetry.update();
 
         double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
         double x = gamepad1.right_stick_x * 1.1; // Counteract imperfect strafing

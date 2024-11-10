@@ -17,13 +17,14 @@ public class ArmMotorTest extends OpMode {
     int armPosIdx = 0;
     @Override
     public void init() {
-        armMotor = hardwareMap.get(DcMotor.class, "armMotor2");
+        armMotor = hardwareMap.get(DcMotor.class, "arm2");
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
     public void loop() {
-        /*
+
         if(gamepad1.dpad_up && armForward && !gamepad1.dpad_down)
         {
             armForward = false;
@@ -50,8 +51,8 @@ public class ArmMotorTest extends OpMode {
         armMotor.setTargetPosition((int)armPos);
         armMotor.setPower( 0.8 );
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-         */
 
+        /*
         if(gamepad1.a) {
             armMotor.setTargetPosition((int) (0 * ARM_TICKS_PER_DEGREE));
             armMotor.setPower(0.3);
@@ -67,7 +68,7 @@ public class ArmMotorTest extends OpMode {
             armMotor.setTargetPosition((int) (180 * ARM_TICKS_PER_DEGREE));
             armMotor.setPower(0.3);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+        } */
     }
 }
 /* Put here in case it is needed
