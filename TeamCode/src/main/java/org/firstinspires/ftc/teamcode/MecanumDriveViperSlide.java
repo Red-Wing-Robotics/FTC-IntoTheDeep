@@ -27,14 +27,15 @@ public class MecanumDriveViperSlide extends OpMode {
 
     final double ARM_POWER = 1d;
     final double VIPER_SLIDE_POWER = 0.5d;
-    //viper slide positions low basket: 0
+    //viper slide positions: low basket: 0; high basket: -1540; sumbersible: -1330 (approx); collect off ground: -302; high rung: 0
     final double ARM_TICKS_PER_DEGREE = 7.46805555555; // taken from GoBilda for test arm
     final double ORIGIN = 0 * ARM_TICKS_PER_DEGREE;
 
     final double SUBMERSIBLE = 20 * ARM_TICKS_PER_DEGREE;
-    final double HIGH_CLIP = 80 * ARM_TICKS_PER_DEGREE;
+    final double HIGH_RUNG = 75 * ARM_TICKS_PER_DEGREE;
+    final double LOW_BASKET = 80 * ARM_TICKS_PER_DEGREE;
     final double HIGH_BASKET = 100 * ARM_TICKS_PER_DEGREE;
-    final double[] ARM_POSITIONS = {ORIGIN, SUBMERSIBLE, HIGH_CLIP, HIGH_BASKET}; // test array to cycle through
+    final double[] ARM_POSITIONS = {ORIGIN, SUBMERSIBLE, HIGH_RUNG, LOW_BASKET, HIGH_BASKET}; // test array to cycle through
     double armPos = 0; // creating and initializing the variable which the arm motor position will be set to
     int armPosIdx = 0; // variable to track what index of ARM_POSITIONS is being used
 
@@ -47,7 +48,7 @@ public class MecanumDriveViperSlide extends OpMode {
     final double CLAW_OPEN = 0.3d;
 
     final double WRIST_IN = 0.5d; //Controlled by y
-    final double WRIST_OUT = 0.75d; //Controlled by x
+    final double WRIST_OUT = 0.85d; //Controlled by x
     final double WRIST_MOVE = 0.1d;
 
     final double INTAKE_IN = -1d;
