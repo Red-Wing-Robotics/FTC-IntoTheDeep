@@ -27,7 +27,7 @@ public class MecanumDriveViperSlide extends OpMode {
 
     final double ARM_POWER = 1d;
     final double VIPER_SLIDE_POWER = 0.5d;
-    //viper slide positions low basket: 0;
+    //viper slide positions low basket: 0
     final double ARM_TICKS_PER_DEGREE = 7.46805555555; // taken from GoBilda for test arm
     final double ORIGIN = 0 * ARM_TICKS_PER_DEGREE;
 
