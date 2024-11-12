@@ -25,7 +25,7 @@ public class MecanumDriveViperSlide extends OpMode {
     public DcMotor armMotor = null;
     DcMotor armMotor2 = null;
 
-    final double ARM_POWER = 1d;
+    final double ARM_POWER = 0.3d;
     final double VIPER_SLIDE_POWER = 0.5d;
 
     final int VS_GROUND = -302;
@@ -114,7 +114,7 @@ public class MecanumDriveViperSlide extends OpMode {
                 if(posIdx < 0)
                     posIdx = ARM_POSITIONS.length - 1;
 
-                setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], 0.8);
+                setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
             }
         else if(gamepad1.dpad_down && armBackward && !gamepad1.dpad_up)
             {
@@ -122,7 +122,7 @@ public class MecanumDriveViperSlide extends OpMode {
                 armBackward = false;
                 posIdx = (posIdx + 1) % ARM_POSITIONS.length;
 
-                setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], 0.8);
+                setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
             }
         else if( !gamepad1.dpad_up && !gamepad1.dpad_down )
             {
@@ -132,7 +132,7 @@ public class MecanumDriveViperSlide extends OpMode {
 
         armPos = ARM_POSITIONS[ posIdx ];
 
-        setMotorPosition(armMotor2, (int)armPos, 0.3);
+        setMotorPosition(armMotor2, (int)armPos, ARM_POWER);
 
         if(gamepad1.x) {
             viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
