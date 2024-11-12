@@ -34,7 +34,6 @@ public class MecanumDriveViperSlide extends OpMode {
     final int VS_LOW_BASKET = 0;
     final int VS_HIGH_BASKET = -1540;
     final int[] VS_POSITIONS = {VS_GROUND, VS_SUBMERSIBLE, VS_HIGH_RUNG, VS_LOW_BASKET, VS_HIGH_BASKET};
-    int vsPos = 0;
     final double ARM_TICKS_PER_DEGREE = 7.46805555555;
     final double ORIGIN = 0 * ARM_TICKS_PER_DEGREE;
     final double ARM_SUBMERSIBLE = 20 * ARM_TICKS_PER_DEGREE;
@@ -96,6 +95,12 @@ public class MecanumDriveViperSlide extends OpMode {
          activeIntake.setPower(0);
     }
 
+    public void setMotorPosition( DcMotor motor, int pos, double power ){
+        motor.setTargetPosition(pos);
+        motor.setPower(power);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     @Override
     public void loop() {
 
@@ -108,12 +113,16 @@ public class MecanumDriveViperSlide extends OpMode {
                 // added to account for setting armPosIdx to -1
                 if(posIdx < 0)
                     posIdx = ARM_POSITIONS.length - 1;
+
+                setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], 0.8);
             }
         else if(gamepad1.dpad_down && armBackward && !gamepad1.dpad_up)
             {
                 armForward = true;
                 armBackward = false;
                 posIdx = (posIdx + 1) % ARM_POSITIONS.length;
+
+                setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], 0.8);
             }
         else if( !gamepad1.dpad_up && !gamepad1.dpad_down )
             {
@@ -122,15 +131,8 @@ public class MecanumDriveViperSlide extends OpMode {
             }
 
         armPos = ARM_POSITIONS[ posIdx ];
-        vsPos = VS_POSITIONS[ posIdx ];
 
-        armMotor2.setTargetPosition((int)armPos);
-        armMotor2.setPower(0.3);
-        armMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        viperSlideMotor.setTargetPosition(vsPos);
-        viperSlideMotor.setPower(0.8);
-        viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setMotorPosition(armMotor2, (int)armPos, 0.3);
 
         if(gamepad1.x) {
             viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
