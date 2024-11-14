@@ -26,7 +26,7 @@ public class MecanumDriveViperSlide extends OpMode {
     DcMotor armMotor2 = null;
 
     final double ARM_POWER = 0.3d;
-    final double VIPER_SLIDE_POWER = 0.5d;
+    final double VIPER_SLIDE_POWER = 1d;
 
     final int VS_GROUND = -302;
     final int VS_SUBMERSIBLE = -1330;
