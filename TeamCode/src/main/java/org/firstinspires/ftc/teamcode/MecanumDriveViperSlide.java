@@ -114,6 +114,9 @@ public class MecanumDriveViperSlide extends OpMode {
                 if(posIdx < 0)
                     posIdx = ARM_POSITIONS.length - 1;
 
+                armPos = ARM_POSITIONS[ posIdx ];
+
+                setMotorPosition( armMotor2, (int)armPos, ARM_POWER );
                 setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
             }
         else if(gamepad1.dpad_down && armBackward && !gamepad1.dpad_up)
@@ -122,6 +125,9 @@ public class MecanumDriveViperSlide extends OpMode {
                 armBackward = false;
                 posIdx = (posIdx + 1) % ARM_POSITIONS.length;
 
+                armPos = ARM_POSITIONS[ posIdx ];
+
+                setMotorPosition( armMotor2, (int)armPos, ARM_POWER );
                 setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
             }
         else if( !gamepad1.dpad_up && !gamepad1.dpad_down )
@@ -129,8 +135,6 @@ public class MecanumDriveViperSlide extends OpMode {
                 armBackward = true;
                 armForward = true;
             }
-
-        armPos = ARM_POSITIONS[ posIdx ];
 
         setMotorPosition(armMotor2, (int)armPos, ARM_POWER);
 
@@ -146,7 +150,7 @@ public class MecanumDriveViperSlide extends OpMode {
             viperSlideMotor.setPower(0);
 
         // possibly necessary:
-        // viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
