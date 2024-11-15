@@ -104,6 +104,8 @@ public class MecanumDriveViperSlide extends OpMode {
     @Override
     public void loop() {
 
+        viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         if(gamepad1.dpad_up && armForward && !gamepad1.dpad_down)
             {
                 armForward = false;
@@ -150,7 +152,7 @@ public class MecanumDriveViperSlide extends OpMode {
             viperSlideMotor.setPower(0);
 
         // possibly necessary:
-        viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
