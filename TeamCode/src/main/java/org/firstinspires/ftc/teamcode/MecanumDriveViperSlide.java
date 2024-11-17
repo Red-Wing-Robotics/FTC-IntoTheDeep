@@ -88,7 +88,7 @@ public class MecanumDriveViperSlide extends OpMode {
          armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
          armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         // viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
          wrist.setPosition(WRIST_IN);
          claw.setPosition(CLAW_CLOSED);
@@ -116,10 +116,10 @@ public class MecanumDriveViperSlide extends OpMode {
                 if(posIdx < 0)
                     posIdx = ARM_POSITIONS.length - 1;
 
-                armPos = ARM_POSITIONS[ posIdx ];
+                // armPos = ARM_POSITIONS[ posIdx ];
 
-                setMotorPosition( armMotor2, (int)armPos, ARM_POWER );
-                setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
+                // setMotorPosition( armMotor2, (int)armPos, ARM_POWER );
+                // setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
             }
         else if(gamepad1.dpad_down && armBackward && !gamepad1.dpad_up)
             {
@@ -127,25 +127,25 @@ public class MecanumDriveViperSlide extends OpMode {
                 armBackward = false;
                 posIdx = (posIdx + 1) % ARM_POSITIONS.length;
 
-                armPos = ARM_POSITIONS[ posIdx ];
+                // armPos = ARM_POSITIONS[ posIdx ];
 
-                setMotorPosition( armMotor2, (int)armPos, ARM_POWER );
-                setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
+                // setMotorPosition( armMotor2, (int)armPos, ARM_POWER );
+                // setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
             }
         else if( !gamepad1.dpad_up && !gamepad1.dpad_down )
             {
                 armBackward = true;
                 armForward = true;
             }
-
+        armPos = ARM_POSITIONS[ posIdx ];
         setMotorPosition(armMotor2, (int)armPos, ARM_POWER);
 
         if(gamepad1.x) {
-            viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            // viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             viperSlideMotor.setPower(VIPER_SLIDE_POWER);
         }
         else if (gamepad1.y) {
-            viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            // viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             viperSlideMotor.setPower(VIPER_SLIDE_POWER * -1);
         }
         else
