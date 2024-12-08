@@ -152,6 +152,7 @@ public class MecanumDriveViperSlide extends OpMode {
         // ACTIVE INTAKE - In dpad_down - Out dpad_up
         // CLAW - Open A Close B
         // WRIST - Open X - Close Y
+
         if (gamepad2.dpad_down)
             activeIntake.setPower(INTAKE_IN);
         else if (gamepad2.dpad_up)
