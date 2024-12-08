@@ -51,9 +51,10 @@ public class MecanumDriveViperSlide extends OpMode {
     final double CLAW_CLOSED = 0d;
     final double CLAW_OPEN = 0.3d;
 
-    final double WRIST_IN = 0.5d; //Controlled by y
-    final double WRIST_OUT = 0.85d; //controlled by x
-    final double WRIST_MOVE = 0.1d;
+    final double WRIST_IN = 0.2d;
+    final double WRIST_DOWN = 0.9d; //Controlled by y
+    final double WRIST_OUT = 0.5d; //controlled by x
+    final double WRIST_MOVE = 0.2d;
 
     final double INTAKE_IN = -1d;
     final double INTAKE_OUT = -INTAKE_IN;
@@ -81,8 +82,8 @@ public class MecanumDriveViperSlide extends OpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Setting up the test arm motor to RUN_TO_POSITION
         armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -166,7 +167,7 @@ public class MecanumDriveViperSlide extends OpMode {
         if (gamepad2.x)
             wrist.setPosition(WRIST_OUT);
         else if (gamepad2.y)
-            wrist.setPosition(WRIST_IN);
+            wrist.setPosition(WRIST_DOWN);
 
         telemetry.addData("Arm Motor Position", armMotor2.getCurrentPosition() / ARM_TICKS_PER_DEGREE);
         telemetry.addData("Viper Slide Motor Position", viperSlideMotor.getCurrentPosition());
