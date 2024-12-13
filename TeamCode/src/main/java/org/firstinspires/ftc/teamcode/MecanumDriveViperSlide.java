@@ -22,7 +22,6 @@ public class MecanumDriveViperSlide extends OpMode {
     DcMotor frontRightMotor = null;
     DcMotor backRightMotor = null;
     public DcMotor viperSlideMotor = null;
-    public DcMotor armMotor = null;
     DcMotor armMotor2 = null;
 
     final double ARM_POWER = 1d;
@@ -73,11 +72,9 @@ public class MecanumDriveViperSlide extends OpMode {
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
         viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlideMotor");
-        armMotor = hardwareMap.get(DcMotor.class, "left_arm");
-        armMotor2 = hardwareMap.get(DcMotor.class, "arm2"); // the 2 outlet in the expansion hub will be the test motor
+        armMotor2 = hardwareMap.get(DcMotor.class, "arm2");
 
         // set behavior flags for hardware
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
