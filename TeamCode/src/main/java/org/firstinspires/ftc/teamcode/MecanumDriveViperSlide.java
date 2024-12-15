@@ -36,13 +36,12 @@ public class MecanumDriveViperSlide extends OpMode {
     final int[] VS_POSITIONS = {VS_GROUND, VS_SUBMERSIBLE, VS_HIGH_RUNG, VS_LOW_BASKET, VS_HIGH_BASKET};
     final double ARM_TICKS_PER_DEGREE = 7.46805555555;
     final double ORIGIN = 0 * ARM_TICKS_PER_DEGREE;
-    final double ARM_SUBMERSIBLE = 20 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SUBMERSIBLE = 30 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SUBMERSIBLE2 = 40 * ARM_TICKS_PER_DEGREE;
     final double ARM_HIGH_RUNG = 75 * ARM_TICKS_PER_DEGREE;
     final double ARM_LOW_BASKET = 80 * ARM_TICKS_PER_DEGREE;
     final double ARM_HIGH_BASKET = 100 * ARM_TICKS_PER_DEGREE;
     final double[] ARM_POSITIONS = {ORIGIN, ARM_SUBMERSIBLE, ARM_SUBMERSIBLE2, ARM_HIGH_RUNG, ARM_LOW_BASKET, ARM_HIGH_BASKET}; // arm positions array to cycle through
-
-    final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
 
     final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
 
@@ -62,6 +61,8 @@ public class MecanumDriveViperSlide extends OpMode {
 
     final double INTAKE_IN = -1d;
     final double INTAKE_OUT = -INTAKE_IN;
+
+    double armPositionFudgeFactor = 0.0d;
 
     @Override
     public void init() {
@@ -141,7 +142,9 @@ public class MecanumDriveViperSlide extends OpMode {
             armForward = true;
         }
         armPos = ARM_POSITIONS[posIdx];
-        setMotorPosition(armMotor2, (int) armPos, ARM_POWER);
+
+        armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
+        setMotorPosition(armMotor2, (int) (armPos  + armPositionFudgeFactor), ARM_POWER);
 
         if (gamepad1.x) {
             // viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
