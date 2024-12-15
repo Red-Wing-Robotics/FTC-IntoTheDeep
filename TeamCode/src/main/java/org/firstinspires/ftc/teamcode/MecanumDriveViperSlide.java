@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@SuppressWarnings("unused")
 @TeleOp(name = "Mecanum Viper Slide")
 public class MecanumDriveViperSlide extends OpMode {
 
@@ -28,12 +29,14 @@ public class MecanumDriveViperSlide extends OpMode {
     final double ARM_POWER = 1d;
     final double VIPER_SLIDE_POWER = 1d;
 
+    /*
     final int VS_GROUND = -302;
     final int VS_SUBMERSIBLE = -1330;
     final int VS_HIGH_RUNG = 0;
     final int VS_LOW_BASKET = 0;
     final int VS_HIGH_BASKET = -1540;
     final int[] VS_POSITIONS = {VS_GROUND, VS_SUBMERSIBLE, VS_HIGH_RUNG, VS_LOW_BASKET, VS_HIGH_BASKET};
+    */
     final double ARM_TICKS_PER_DEGREE = 7.46805555555;
     final double ORIGIN = 0 * ARM_TICKS_PER_DEGREE;
     final double ARM_SUBMERSIBLE = 30 * ARM_TICKS_PER_DEGREE;
@@ -57,7 +60,6 @@ public class MecanumDriveViperSlide extends OpMode {
 
     final double WRIST_IN = 0.1d; //Controlled by y
     final double WRIST_OUT = 0.85d; //controlled by x
-    final double WRIST_MOVE = 0.1d;
 
     final double INTAKE_IN = -1d;
     final double INTAKE_OUT = -INTAKE_IN;
