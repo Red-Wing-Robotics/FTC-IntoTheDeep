@@ -37,7 +37,8 @@ public class MecanumDriveViperSlide extends OpMode {
     final int VS_HIGH_BASKET = -1540;
     final int[] VS_POSITIONS = {VS_GROUND, VS_SUBMERSIBLE, VS_HIGH_RUNG, VS_LOW_BASKET, VS_HIGH_BASKET};
     */
-    final double ARM_TICKS_PER_DEGREE = 7.46805555555;
+    final double ARM_TICKS_PER_DEGREE312 = 7.46805555555;
+    final double ARM_TICKS_PER_DEGREE = 19.791666666667;
     final double ORIGIN = 0 * ARM_TICKS_PER_DEGREE;
     final double ARM_SUBMERSIBLE = 30 * ARM_TICKS_PER_DEGREE;
     final double ARM_SUBMERSIBLE2 = 40 * ARM_TICKS_PER_DEGREE;
@@ -55,10 +56,11 @@ public class MecanumDriveViperSlide extends OpMode {
     boolean armForward = true;
     boolean armBackward = true;
 
-    final double CLAW_CLOSED = 0d;
-    final double CLAW_OPEN = 0.3d;
+    final double CLAW_CLOSED = 0.3d;
+    final double CLAW_OPEN = 1d;
 
     final double WRIST_IN = 0.1d; //Controlled by y
+    final double WRIST_MID = 0.45d;
     final double WRIST_OUT = 0.85d; //controlled by x
 
     final double INTAKE_IN = -1d;
@@ -79,18 +81,17 @@ public class MecanumDriveViperSlide extends OpMode {
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
         viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlideMotor");
-        armMotor = hardwareMap.get(DcMotor.class, "left_arm");
         armMotor2 = hardwareMap.get(DcMotor.class, "arm2"); // the 2 outlet in the expansion hub will be the test motor
 
         // set behavior flags for hardware
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Setting up the test arm motor to RUN_TO_POSITION
         armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -176,7 +177,7 @@ public class MecanumDriveViperSlide extends OpMode {
         if (gamepad2.x)
             wrist.setPosition(WRIST_OUT);
         else if (gamepad2.y)
-            wrist.setPosition(WRIST_IN);
+            wrist.setPosition(WRIST_MID);
 
         telemetry.addData("Arm Motor Position", armMotor2.getCurrentPosition() / ARM_TICKS_PER_DEGREE);
         telemetry.addData("Viper Slide Motor Position", viperSlideMotor.getCurrentPosition());
