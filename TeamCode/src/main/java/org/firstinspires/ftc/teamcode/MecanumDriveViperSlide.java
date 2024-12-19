@@ -149,10 +149,12 @@ public class MecanumDriveViperSlide extends OpMode {
         armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
         setMotorPosition(armMotor2, (int) (armPos  + armPositionFudgeFactor), ARM_POWER);
 
+        boolean canExtend = (viperSlideMotor.getCurrentPosition() > -1235 || armMotor2.getCurrentPosition() > 74);
+
         if (gamepad1.x) {
             // viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             viperSlideMotor.setPower(VIPER_SLIDE_POWER);
-        } else if (gamepad1.y) {
+        } else if (gamepad1.y && canExtend ) {
             // viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             viperSlideMotor.setPower(VIPER_SLIDE_POWER * -1);
         } else
