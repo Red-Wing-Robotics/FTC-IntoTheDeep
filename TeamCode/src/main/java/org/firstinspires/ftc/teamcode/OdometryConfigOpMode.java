@@ -115,7 +115,7 @@ public class OdometryConfigOpMode extends OpMode {
         armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Setting up sparkfun sensor
-        myOtos = hardwareMap.get(SparkFunOTOS.class, "sparkfun");
+        myOtos = hardwareMap.get(SparkFunOTOS.class, "SparkFun");
 
         // viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
