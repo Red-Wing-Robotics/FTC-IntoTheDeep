@@ -14,12 +14,12 @@ public class MecanumDriveViperSlide extends OpMode {
     // HARDWARE
     //---------------------------------------------
 
-    // SERVOS
+    // SERVOS -------------------------------------
 
     Servo wrist = null;
     Servo claw = null;
 
-    // MOTORS
+    // MOTORS -------------------------------------
 
     DcMotor frontLeftMotor = null;
     DcMotor backLeftMotor = null;
