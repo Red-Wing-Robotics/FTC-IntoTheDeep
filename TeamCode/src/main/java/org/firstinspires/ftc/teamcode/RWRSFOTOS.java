@@ -264,9 +264,9 @@ public class RWRSFOTOS extends LinearOpMode {
 
                 // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
 
-                myOtos.setLinearScalar(1.008);
+                myOtos.setLinearScalar(1.001);
 
-                myOtos.setAngularScalar(0.992);
+                myOtos.setAngularScalar(1.018);
 
 
 
