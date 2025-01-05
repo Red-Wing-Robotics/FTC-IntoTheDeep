@@ -22,9 +22,9 @@ public class OdometryConfigOpMode extends OpMode {
 
     public AngleUnit angleUnit = AngleUnit.DEGREES;
 
-    public double linearScalar = 1d;
+    public double linearScalar = 1.122d;
 
-    public double angularScalar = 1d;
+    public double angularScalar = 1.018d;
 
     // Setup Servos
     //    Claw Expansion Hub 1 "claw"
@@ -107,8 +107,8 @@ public class OdometryConfigOpMode extends OpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Setting up the test arm motor to RUN_TO_POSITION
         armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

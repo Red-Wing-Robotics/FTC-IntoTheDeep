@@ -100,13 +100,13 @@ public class RWRSFOTOS extends LinearOpMode {
 
                 // to the names assigned during the robot configuration step on the DS or RC devices.
 
-                leftFrontDrive  = hardwareMap.get(DcMotor.class, "drive_leftFront");
+                leftFrontDrive  = hardwareMap.get(DcMotor.class, "frontLeftMotor");
 
-                leftBackDrive  = hardwareMap.get(DcMotor.class, "drive_leftBack");
+                leftBackDrive  = hardwareMap.get(DcMotor.class, "backLeftMotor");
 
-                rightFrontDrive = hardwareMap.get(DcMotor.class, "drive_rightFront");
+                rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRightMotor");
 
-                rightBackDrive = hardwareMap.get(DcMotor.class, "drive_rightBack");
+                rightBackDrive = hardwareMap.get(DcMotor.class, "backRightMotor");
 
 
 
@@ -264,9 +264,9 @@ public class RWRSFOTOS extends LinearOpMode {
 
                 // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
 
-                myOtos.setLinearScalar(1.008);
+                myOtos.setLinearScalar(1.001);
 
-                myOtos.setAngularScalar(0.992);
+                myOtos.setAngularScalar(1.018);
 
 
 
@@ -474,7 +474,7 @@ public class RWRSFOTOS extends LinearOpMode {
 
          */
 
-        void moveRobot(double x, double y, double yaw) {
+        void moveRobot(double y, double x, double yaw) {
 
 
 
