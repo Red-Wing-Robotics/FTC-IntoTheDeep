@@ -29,7 +29,7 @@ public class TestOdometryOpMode extends AbstractSparkFunOdometryAutoOpMode {
         // would be 3600/3585 = 1.004.
         //
         // Can be any value from 0.872 to 1.127 in increments of 0.001 (0.1%).
-        angularScalar = 1d;
+        angularScalar = 1.018d;
 
         // To calibrate the linear scalar, move the
         // robot a known distance and measure the error; do this multiple times at
@@ -38,7 +38,7 @@ public class TestOdometryOpMode extends AbstractSparkFunOdometryAutoOpMode {
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
         //
         // Can be any value from 0.872 to 1.127 in increments of 0.001 (0.1%).
-        linearScalar = 1d;
+        linearScalar = 1.001d;
     }
 
     @Override
