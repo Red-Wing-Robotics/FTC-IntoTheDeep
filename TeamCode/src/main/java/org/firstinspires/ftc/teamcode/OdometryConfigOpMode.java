@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -97,18 +99,17 @@ public class OdometryConfigOpMode extends OpMode {
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
         viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlideMotor");
-        armMotor = hardwareMap.get(DcMotor.class, "left_arm");
         armMotor2 = hardwareMap.get(DcMotor.class, "arm2"); // the 2 outlet in the expansion hub will be the test motor
 
         // set behavior flags for hardware
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Setting up the test arm motor to RUN_TO_POSITION
         armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -123,7 +124,12 @@ public class OdometryConfigOpMode extends OpMode {
         claw.setPosition(CLAW_CLOSED);
         activeIntake.setPower(0);
 
-        configureOtos();
+        try {
+            configureOtos();
+        } catch(InterruptedException exception) {
+
+        }
+
     }
 
     public void setMotorPosition(DcMotor motor, int pos, double power) {
@@ -161,7 +167,7 @@ public class OdometryConfigOpMode extends OpMode {
             // armPos = ARM_POSITIONS[ posIdx ];
 
             // setMotorPosition( armMotor2, (int)armPos, ARM_POWER );
-            // setMotorPosition( viperSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
+            // setMotorPosition( viperrSlideMotor, VS_POSITIONS[ posIdx ], VIPER_SLIDE_POWER);
         } else if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
             armBackward = true;
             armForward = true;
@@ -225,7 +231,7 @@ public class OdometryConfigOpMode extends OpMode {
         backRightMotor.setPower(backRightPower);
     }
 
-    protected void configureOtos() {
+    protected void configureOtos() throws InterruptedException {
         // Setup OTOS
         telemetry.addLine("Configuring OTOS...");
         telemetry.update();
@@ -235,7 +241,9 @@ public class OdometryConfigOpMode extends OpMode {
         myOtos.setLinearScalar(linearScalar);
         myOtos.setAngularScalar(angularScalar);
         myOtos.calibrateImu();
+        sleep(3000);
         myOtos.resetTracking();
+        sleep(3000);
         myOtos.setPosition(startingPosition);
 
         // Get the hardware and firmware version
