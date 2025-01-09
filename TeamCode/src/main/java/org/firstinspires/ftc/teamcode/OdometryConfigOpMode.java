@@ -24,9 +24,9 @@ public class OdometryConfigOpMode extends OpMode {
 
     public AngleUnit angleUnit = AngleUnit.DEGREES;
 
-    public double linearScalar = 1d;
+    public double linearScalar = 1.122d;
 
-    public double angularScalar = 1d;
+    public double angularScalar = 1.018d;
 
     // Setup Servos
     //    Claw Expansion Hub 1 "claw"

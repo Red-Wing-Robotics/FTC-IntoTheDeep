@@ -226,7 +226,7 @@ public class RWRSFOTOS extends LinearOpMode {
 
                 // tweaked slightly to compensate for imperfect mounting (eg. 1.3 degrees).
 
-                SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0); // should be -3.75 & -7.5 and 90
+                SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.75, -7.5, 90); // should be -3.75 & -7.5 and 90
 
                 myOtos.setOffset(offset);
 
@@ -264,9 +264,9 @@ public class RWRSFOTOS extends LinearOpMode {
 
                 // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
 
-                myOtos.setLinearScalar(1.000);
+                myOtos.setLinearScalar(1.008);
 
-                myOtos.setAngularScalar(1.000);
+                myOtos.setAngularScalar(0.992);
 
 
 

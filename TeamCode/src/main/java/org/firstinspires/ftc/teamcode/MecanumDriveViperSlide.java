@@ -43,7 +43,7 @@ public class MecanumDriveViperSlide extends OpMode {
     final double ARM_SUBMERSIBLE2 = 40 * ARM_TICKS_PER_DEGREE;
     final double ARM_HIGH_RUNG = 75 * ARM_TICKS_PER_DEGREE;
     final double ARM_LOW_BASKET = 80 * ARM_TICKS_PER_DEGREE;
-    final double ARM_HIGH_BASKET = 100 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HIGH_BASKET = 110 * ARM_TICKS_PER_DEGREE;
     final double[] ARM_POSITIONS = {ORIGIN, ARM_SUBMERSIBLE, ARM_SUBMERSIBLE2, ARM_HIGH_RUNG, ARM_LOW_BASKET, ARM_HIGH_BASKET}; // arm positions array to cycle through
 
     final double FUDGE_FACTOR = 5 * ARM_TICKS_PER_DEGREE;
@@ -51,7 +51,7 @@ public class MecanumDriveViperSlide extends OpMode {
     // CLAW ---------------------------------------
 
     final double CLAW_CLOSED = 0.3d;
-    final double CLAW_OPEN = 1d;
+    final double CLAW_OPEN = 0.6d;
 
     // WRIST --------------------------------------
 
