@@ -205,7 +205,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             telemetry.addData("xError", xError);
             telemetry.addData("yError", yError);
             telemetry.addData("yawError", yawError);
-            telemetry.update(); d
+            telemetry.update();
 
             setArmPosition( armPos, armPower );
             setViperSlidePosition( vsPos, vsPower );
