@@ -216,7 +216,9 @@ public class MecanumDriveViperSlide extends OpMode {
             vsPos--;
         }
 
-        setMotorPosition( viperSlideMotor, vsPos, VIPER_SLIDE_POWER);
+        if ( vsPos != viperSlideMotor.getCurrentPosition() ){
+            setMotorPosition( viperSlideMotor, vsPos, VIPER_SLIDE_POWER);
+        }
 
         telemetry.addData("Viper Slide Motor Position", viperSlideMotor.getCurrentPosition());
     }

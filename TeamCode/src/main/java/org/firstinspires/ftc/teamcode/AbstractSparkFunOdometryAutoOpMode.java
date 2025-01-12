@@ -51,14 +51,14 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 drive motors.
 
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
-    private DcMotor armMotor = null;
-    private DcMotor vsMotor = null;
-    private Servo wrist = null;
-    private Servo claw = null;
+    protected DcMotor leftFrontDrive = null;
+    protected DcMotor leftBackDrive = null;
+    protected DcMotor rightFrontDrive = null;
+    protected DcMotor rightBackDrive = null;
+    protected DcMotor armMotor = null;
+    protected DcMotor vsMotor = null;
+    protected Servo wrist = null;
+    protected Servo claw = null;
 
     // Sensors
     private SparkFunOTOS myOtos;        // Optical tracking odometry sensor
@@ -144,10 +144,10 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         myOtos.setAngularScalar(angularScalar);
         myOtos.calibrateImu();
         // Allow sleep for calibration to complete
-        sleep(1000);
+        sleep(2000);
         myOtos.resetTracking();
         // Allow sleep to reset tracking (likely not needed)
-        sleep(1000);
+        sleep(2000);
         myOtos.setPosition(startingPosition);
 
         // Get the hardware and firmware version
@@ -167,7 +167,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
      * Move robot to a designated X,Y position and heading
      * set the maxTime to have the driving logic timeout after a number of seconds.
      */
-    void otosDrive(double targetX, double targetY, double targetHeading, int maxTime) {
+    void otosDrive(double targetX, double targetY, double targetHeading, int maxTime, int armPos, double armPower, int vsPos, double vsPower, double clawPos, double wristPos ) {
 
         double drive, strafe, turn;
         double currentRange, targetRange, initialBearing, targetBearing, xError, yError, yawError;
@@ -180,16 +180,20 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
         runtime.reset();
 
-        while(opModeIsActive() && (runtime.milliseconds() < maxTime*1000) &&
+        while(opModeIsActive() && (runtime.milliseconds() < maxTime*1000)) {
 
-                ((Math.abs(xError) > 1.5) || (Math.abs(yError) > 1.5) || (Math.abs(yawError) > 4)) ) {
+            if ((Math.abs(xError) > 1.5) || (Math.abs(yError) > 1.5) || (Math.abs(yawError) > 4)) {
 
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            drive  = Range.clip(xError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-            strafe = Range.clip(yError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-            turn   = Range.clip(yawError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+                // Use the speed and turn "gains" to calculate how we want the robot to move.
+                drive = Range.clip(xError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                strafe = Range.clip(yError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+                turn = Range.clip(yawError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
 
-            telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+                telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+
+                // Apply desired axes motions to the drivetrain.
+                moveRobot(drive, strafe, turn);
+            }
 
             // current x,y swapped due to 90 degree rotation
             telemetry.addData("current X coordinate", currentPos.x);
@@ -203,8 +207,10 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             telemetry.addData("yawError", yawError);
             telemetry.update();
 
-            // Apply desired axes motions to the drivetrain.
-            moveRobot(drive, strafe, turn);
+            setArmPosition( armPos, armPower );
+            setViperSlidePosition( vsPos, vsPower );
+            claw.setPosition( clawPos );
+            wrist.setPosition( wristPos );
 
             // then recalc error
             currentPos = myPosition();
@@ -265,20 +271,21 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         sleep(10);
     }
 
-    void setArmPosition( int pos, double power, int maxTime) {
-        runtime.reset();
+    void setArmPosition( int pos, double power ) {
 
-        while(opModeIsActive() && (runtime.milliseconds() < maxTime*1000)) {
             armMotor.setTargetPosition(pos);
             armMotor.setPower(power);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
     }
 
     void setViperSlidePosition( int pos, double power ) {
         vsMotor.setTargetPosition(pos);
         vsMotor.setPower(power);
         vsMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    void drive( double targetX, double targetY, double targetHeading, int maxTime){
+        otosDrive( targetX, targetY, targetHeading, maxTime, armMotor.getCurrentPosition(), ARM_POWER, vsMotor.getCurrentPosition(), VIPER_SLIDE_POWER, claw.getPosition(), wrist.getPosition());
     }
 
 }
