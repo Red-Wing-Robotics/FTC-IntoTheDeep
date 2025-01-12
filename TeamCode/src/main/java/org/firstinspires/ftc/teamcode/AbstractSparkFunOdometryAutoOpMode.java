@@ -172,6 +172,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         double drive, strafe, turn;
         double currentRange, targetRange, initialBearing, targetBearing, xError, yError, yawError;
         double opp, adj;
+        boolean hasArrived = false;
 
         SparkFunOTOS.Pose2D currentPos = myPosition();
         xError = targetX-currentPos.x;
@@ -180,7 +181,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
         runtime.reset();
 
-        while(opModeIsActive() && (runtime.milliseconds() < maxTime*1000)) {
+        while(opModeIsActive() && (runtime.milliseconds() < maxTime*1000) && !hasArrived) {
 
             if ((Math.abs(xError) > 1.5) || (Math.abs(yError) > 1.5) || (Math.abs(yawError) > 4)) {
 
@@ -194,6 +195,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
                 // Apply desired axes motions to the drivetrain.
                 moveRobot(drive, strafe, turn);
             } else {
+                hasArrived = true;
                 moveRobot(0,0,0);
             }
 
