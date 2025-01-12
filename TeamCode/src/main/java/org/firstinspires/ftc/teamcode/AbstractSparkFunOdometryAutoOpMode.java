@@ -265,10 +265,14 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         sleep(10);
     }
 
-    void setArmPosition( int pos, double power ) {
-        armMotor.setTargetPosition(pos);
-        armMotor.setPower(power);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    void setArmPosition( int pos, double power, int maxTime) {
+        runtime.reset();
+
+        while(opModeIsActive() && (runtime.milliseconds() < maxTime*1000)) {
+            armMotor.setTargetPosition(pos);
+            armMotor.setPower(power);
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
     }
 
     void setViperSlidePosition( int pos, double power ) {

@@ -13,7 +13,7 @@ public class TestAuto extends AbstractSparkFunOdometryAutoOpMode {
 
     @Override
     void runOdometryDrive() {
-        setArmPosition( (int)ARM_HANG_SPECIMEN, ARM_POWER );
+        setArmPosition( (int)ARM_HANG_SPECIMEN, ARM_POWER, 2 );
     }
 
 }
