@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -35,9 +36,9 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
     public AngleUnit angleUnit = AngleUnit.DEGREES;
 
-    public double linearScalar = 1d;
+    public double linearScalar = 1.121d;
 
-    public double angularScalar = 1d;
+    public double angularScalar = 1.018d;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -59,15 +60,22 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "drive_leftFront");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "drive_leftBack");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "drive_rightFront");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "drive_rightBack");
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "backLeftMotor");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "backRightMotor");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        // set behavior flags for hardware
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Set direction for drive
+        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Get a reference to the sensor
         myOtos = hardwareMap.get(SparkFunOTOS.class, "SparkFun");
@@ -112,13 +120,16 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         // Setup OTOS
         telemetry.addLine("Configuring OTOS...");
         telemetry.update();
+
         myOtos.setLinearUnit(linearUnit);
         myOtos.setAngularUnit(angleUnit);
         myOtos.setOffset(offset);
         myOtos.setLinearScalar(linearScalar);
         myOtos.setAngularScalar(angularScalar);
         myOtos.calibrateImu();
+        sleep(2000);
         myOtos.resetTracking();
+        sleep(2000);
         myOtos.setPosition(startingPosition);
 
         // Get the hardware and firmware version
