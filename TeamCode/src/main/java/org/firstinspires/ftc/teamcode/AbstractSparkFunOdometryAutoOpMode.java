@@ -205,7 +205,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             telemetry.addData("xError", xError);
             telemetry.addData("yError", yError);
             telemetry.addData("yawError", yawError);
-            telemetry.update();
+            telemetry.update(); d
 
             setArmPosition( armPos, armPower );
             setViperSlidePosition( vsPos, vsPower );
@@ -219,7 +219,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             yawError = targetHeading-currentPos.h;
         }
 
-        moveRobot(0,0,0);
+        //moveRobot(0,0,0);
         currentPos = myPosition();
 
         telemetry.addData("current X coordinate", currentPos.x);
@@ -272,10 +272,9 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     void setArmPosition( int pos, double power ) {
-
-            armMotor.setTargetPosition(pos);
-            armMotor.setPower(power);
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setTargetPosition(pos);
+        armMotor.setPower(power);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     void setViperSlidePosition( int pos, double power ) {
