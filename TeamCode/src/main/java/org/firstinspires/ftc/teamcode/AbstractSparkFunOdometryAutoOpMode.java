@@ -6,6 +6,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -26,6 +27,19 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     public double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public double MAX_AUTO_STRAFE = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public double MAX_AUTO_TURN  = 0.4;   //  Clip the turn speed to this max value (adjust for your robot)
+    final double CLAW_CLOSED = 0.3d;
+    final double CLAW_OPEN = 0.6d;
+    final double WRIST_IN = 0.1d;
+    final double WRIST_MID = 0.45d;
+    final double WRIST_DOWN = 0.85d;
+    final double ARM_POWER = 1d;
+    final double VIPER_SLIDE_POWER = 1d;
+    final double ARM_TICKS_PER_DEGREE = 19.791666666667;
+    final double ORIGIN = 0 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HANG_SPECIMEN = 40 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HIGH_RUNG = 75 * ARM_TICKS_PER_DEGREE;
+    final double ARM_LOW_BASKET = 80 * ARM_TICKS_PER_DEGREE;
+    final double ARM_HIGH_BASKET = 110 * ARM_TICKS_PER_DEGREE;
 
     public SparkFunOTOS.Pose2D startingPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
     public SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
@@ -41,6 +55,10 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    private DcMotor armMotor = null;
+    private DcMotor vsMotor = null;
+    private Servo wrist = null;
+    private Servo claw = null;
 
     // Sensors
     private SparkFunOTOS myOtos;        // Optical tracking odometry sensor
@@ -55,12 +73,19 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "backLeftMotor");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRightMotor");
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRightMotor");
+        vsMotor = hardwareMap.get(DcMotor.class, "viperSlideMotor");
+        armMotor = hardwareMap.get(DcMotor.class, "arm2");
+
+        wrist = hardwareMap.get(Servo.class, "wrist");
+        claw = hardwareMap.get(Servo.class, "claw");
 
         // set behavior flags for hardware
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        vsMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set direction for drive
         leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -68,8 +93,17 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        vsMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        vsMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         // Get a reference to the sensor
         myOtos = hardwareMap.get(SparkFunOTOS.class, "SparkFun");
+
+        wrist.setPosition(WRIST_IN);
+        claw.setPosition(CLAW_CLOSED);
 
         // All the configuration for the OTOS is done in this helper method, check it out!
         configureOtos();
@@ -229,6 +263,18 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
         sleep(10);
+    }
+
+    void setArmPosition( int pos, double power ) {
+        armMotor.setTargetPosition(pos);
+        armMotor.setPower(power);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    void setViperSlidePosition( int pos, double power ) {
+        vsMotor.setTargetPosition(pos);
+        vsMotor.setPower(power);
+        vsMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 }

@@ -67,6 +67,7 @@ public class MecanumDriveViperSlide extends OpMode {
 
     double armPos = 0; // the variable which the arm motor position will be set to
     int posIdx = 0; // variable to track what index of ARM_POSITIONS is being used
+    int vsPos = 0;
 
     // variables telling whether or not the arm can be moved forward or backward
     boolean armForward = true;
@@ -106,6 +107,9 @@ public class MecanumDriveViperSlide extends OpMode {
         // Setting up the test arm motor to RUN_TO_POSITION
         armMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -201,17 +205,18 @@ public class MecanumDriveViperSlide extends OpMode {
     private void controlViperSlide() {
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        boolean canExtend = (viperSlideMotor.getCurrentPosition() > -1235 || armMotor2.getCurrentPosition() > 74);
+        boolean canExtend = (viperSlideMotor.getCurrentPosition() > -1235 || armMotor2.getCurrentPosition() > 74 * ARM_TICKS_PER_DEGREE);
+        boolean canRetract = viperSlideMotor.getCurrentPosition() < 0;
 
-        if (gamepad1.x) {
+        if (gamepad1.x && canRetract ) {
             // viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            viperSlideMotor.setPower(VIPER_SLIDE_POWER);
+            vsPos++;
         } else if (gamepad1.y && canExtend ) {
             // viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            viperSlideMotor.setPower(VIPER_SLIDE_POWER * -1);
-        } else {
-            viperSlideMotor.setPower(0);
+            vsPos--;
         }
+
+        setMotorPosition( viperSlideMotor, vsPos, VIPER_SLIDE_POWER);
 
         telemetry.addData("Viper Slide Motor Position", viperSlideMotor.getCurrentPosition());
     }
