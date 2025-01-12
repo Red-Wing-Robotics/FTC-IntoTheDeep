@@ -193,6 +193,8 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
                 // Apply desired axes motions to the drivetrain.
                 moveRobot(drive, strafe, turn);
+            } else {
+                moveRobot(0,0,0);
             }
 
             // current x,y swapped due to 90 degree rotation
@@ -205,7 +207,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             telemetry.addData("xError", xError);
             telemetry.addData("yError", yError);
             telemetry.addData("yawError", yawError);
-            telemetry.update(); d
+            telemetry.update();
 
             setArmPosition( armPos, armPower );
             setViperSlidePosition( vsPos, vsPower );
@@ -219,7 +221,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             yawError = targetHeading-currentPos.h;
         }
 
-        //moveRobot(0,0,0);
+        moveRobot(0,0,0);
         currentPos = myPosition();
 
         telemetry.addData("current X coordinate", currentPos.x);
