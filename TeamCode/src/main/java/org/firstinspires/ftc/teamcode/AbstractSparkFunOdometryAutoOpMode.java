@@ -197,6 +197,18 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
                 moveRobot(0,0,0);
             }
 
+            // then recalc error
+            currentPos = myPosition();
+            xError = targetX-currentPos.x;
+            yError = targetY-currentPos.y;
+            yawError = targetHeading-currentPos.h;
+
+            // Set arm, claw, and slide
+            setArmPosition( armPos, armPower );
+            setViperSlidePosition( vsPos, vsPower );
+            claw.setPosition( clawPos );
+            wrist.setPosition( wristPos );
+
             // current x,y swapped due to 90 degree rotation
             telemetry.addData("current X coordinate", currentPos.x);
             telemetry.addData("current Y coordinate", currentPos.y);
@@ -208,20 +220,12 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             telemetry.addData("yError", yError);
             telemetry.addData("yawError", yawError);
             telemetry.update();
-
-            setArmPosition( armPos, armPower );
-            setViperSlidePosition( vsPos, vsPower );
-            claw.setPosition( clawPos );
-            wrist.setPosition( wristPos );
-
-            // then recalc error
-            currentPos = myPosition();
-            xError = targetX-currentPos.x;
-            yError = targetY-currentPos.y;
-            yawError = targetHeading-currentPos.h;
         }
 
+        // Stop robot movement
         moveRobot(0,0,0);
+
+        // Set robot position
         currentPos = myPosition();
 
         telemetry.addData("current X coordinate", currentPos.x);
