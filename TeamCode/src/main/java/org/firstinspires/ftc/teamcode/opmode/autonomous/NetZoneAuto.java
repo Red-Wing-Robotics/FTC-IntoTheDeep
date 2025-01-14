@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+@SuppressWarnings("unused")
 @Autonomous(name="Net Zone Auto", group="RWR")
 public class NetZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
 

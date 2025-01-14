@@ -30,7 +30,7 @@ public class Robot extends AbstractSparkFunRobot {
 
     // Local variables -----------------------------------------------
 
-    private int armPosition = (int) RobotPosition.ARM_ORIGIN;
+    private int armPosition = RobotPosition.ARM_ORIGIN;
     private double armPower = 1.0d;
     private int vsPosition = 0;
     private double vsPower = 0;

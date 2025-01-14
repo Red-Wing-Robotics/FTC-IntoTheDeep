@@ -57,8 +57,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     private void otosDrive(double targetX, double targetY, double targetHeading, int maxTime, int armPos, double armPower, int vsPos, double vsPower, double clawPos, double wristPos ) {
 
         double drive, strafe, turn;
-        double currentRange, targetRange, initialBearing, targetBearing, xError, yError, yawError;
-        double opp, adj;
+        double xError, yError, yawError;
         boolean hasArrived = false;
 
         SparkFunOTOS.Pose2D currentPos = myPosition();
@@ -129,6 +128,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         */
     SparkFunOTOS.Pose2D myPosition() {
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
+        //noinspection SuspiciousNameCombination
         return(new SparkFunOTOS.Pose2D(pos.y, pos.x, -pos.h));
     }
 

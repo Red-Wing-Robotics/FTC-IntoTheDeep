@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.robot.RobotPosition;
+
 @SuppressWarnings("unused")
 @Autonomous(name="Observation Zone Auto", group="RWR")
 public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
@@ -16,6 +18,7 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
 
     @Override
     void runOdometryDrive() {
+        robot.setArmPosition(RobotPosition.ARM_HANG_SPECIMEN);
         autoDrive(5, 22, 0, 2);
         autoDrive(50, 22, 0, 2);
         autoDrive(50, 30, 0, 2);
