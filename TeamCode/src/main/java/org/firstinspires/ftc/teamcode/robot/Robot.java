@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -11,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Robot extends AbstractSparkFunRobot {
 
     // Motors --------------------------------------------------------
+
     public DcMotor leftFrontDrive = null;
     public DcMotor leftBackDrive = null;
     public DcMotor rightFrontDrive = null;
@@ -22,11 +22,6 @@ public class Robot extends AbstractSparkFunRobot {
 
     public Servo wrist = null;
     public Servo claw = null;
-
-    // Sensors -------------------------------------------------------
-    public SparkFunOTOS myOtos;
-
-    // Constants --
 
     // Local variables -----------------------------------------------
 
