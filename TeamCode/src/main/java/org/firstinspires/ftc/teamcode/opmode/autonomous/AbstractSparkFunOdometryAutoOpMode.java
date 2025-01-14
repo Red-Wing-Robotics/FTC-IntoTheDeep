@@ -96,7 +96,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             robot.setViperSlidePosition(vsPos, vsPower);
             robot.setWristPosition(wristPos);
             robot.setClawPosition(clawPos);
-            robot.setRobotAttachments();
+            robot.setRobotAttachmentPositions();
 
             // current x,y swapped due to 90 degree rotation
             telemetry.addData("current X coordinate", currentPos.x);

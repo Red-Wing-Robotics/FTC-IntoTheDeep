@@ -28,6 +28,14 @@ public abstract class AbstractSparkFunRobot extends AbstractRobot {
         configureOtos();
     }
 
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
     private void configureOtos() {
 
         // Setup OTOS

@@ -28,7 +28,7 @@ public class Robot extends AbstractSparkFunRobot {
     private int armPosition = RobotPosition.ARM_ORIGIN;
     private double armPower = 1.0d;
     private int vsPosition = 0;
-    private double vsPower = 0;
+    private double vsPower = 1.0d;
     private double clawPosition = RobotPosition.CLAW_CLOSED;
     private double wristPosition = RobotPosition.WRIST_IN;
 
@@ -71,7 +71,7 @@ public class Robot extends AbstractSparkFunRobot {
         vsMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Will move the "attachments" to their starting positions
-        setRobotAttachments();
+        setRobotAttachmentPositions();
 
         // Run configureHardware in parent class (which initializes sparkfun chip)
         super.configureHardware();
@@ -109,7 +109,7 @@ public class Robot extends AbstractSparkFunRobot {
         wrist.setPosition(wristPosition);
     }
 
-    public void setRobotAttachments() {
+    public void setRobotAttachmentPositions() {
         // Arm motor
         armMotor.setTargetPosition(armPosition);
         armMotor.setPower(armPower);

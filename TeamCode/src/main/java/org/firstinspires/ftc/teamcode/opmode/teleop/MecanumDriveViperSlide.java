@@ -144,15 +144,17 @@ public class MecanumDriveViperSlide extends OpMode {
     }
 
     private void controlServos() {
-        if (gamepad2.a)
+        if (gamepad2.a) {
             robot.setClawPosition(RobotPosition.CLAW_OPEN);
-        else if (gamepad2.b)
+        } else if (gamepad2.b) {
             robot.setClawPosition(RobotPosition.CLAW_CLOSED);
+        }
 
-        if (gamepad2.x)
+        if (gamepad2.x) {
             robot.setWristPosition(RobotPosition.WRIST_DOWN);
-        else if (gamepad2.y)
+        } else if (gamepad2.y) {
             robot.setWristPosition(RobotPosition.WRIST_MID);
+        }
     }
 
 }

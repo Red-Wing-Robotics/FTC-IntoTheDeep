@@ -18,12 +18,4 @@ public abstract class AbstractRobot {
 
     protected abstract void configureHardware();
 
-    public final void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
 }
