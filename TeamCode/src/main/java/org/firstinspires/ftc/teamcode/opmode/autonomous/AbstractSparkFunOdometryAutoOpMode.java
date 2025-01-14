@@ -181,6 +181,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         );
     }
 
+    @SuppressWarnings("unused")
     public void autoDrive( double targetX, double targetY, double targetHeading, int maxTime, int armPos, double armPower, int vsPos, double vsPower, double clawPos, double wristPos ) {
         otosDrive(
                 targetX,
