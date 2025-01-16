@@ -28,6 +28,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         configureAutoDrive();
 
         robot = new Robot(hardwareMap, telemetry);
+        robot.configureHardware();
 
         sleep(1000);
 
@@ -172,12 +173,12 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
                 targetY,
                 targetHeading,
                 maxTime,
-                robot.armMotor.getCurrentPosition(),
+                robot.armPosition,
                 1.0d,
-                robot.vsMotor.getCurrentPosition(),
+                robot.vsPosition,
                 1.0d,
-                robot.claw.getPosition(),
-                robot.wrist.getPosition()
+                robot.clawPosition,
+                robot.wristPosition
         );
     }
 

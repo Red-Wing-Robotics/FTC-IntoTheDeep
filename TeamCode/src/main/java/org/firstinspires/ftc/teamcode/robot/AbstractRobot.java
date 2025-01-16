@@ -13,9 +13,8 @@ public abstract class AbstractRobot {
     public AbstractRobot(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.hardwareMap = hardwareMap;
-        configureHardware();
     }
 
-    protected abstract void configureHardware();
+    public abstract void configureHardware();
 
 }

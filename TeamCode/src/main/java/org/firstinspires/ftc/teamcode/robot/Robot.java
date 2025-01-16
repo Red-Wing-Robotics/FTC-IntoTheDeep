@@ -25,19 +25,19 @@ public class Robot extends AbstractSparkFunRobot {
 
     // Local variables -----------------------------------------------
 
-    private int armPosition = RobotPosition.ARM_ORIGIN;
+    public int armPosition = RobotPosition.ARM_ORIGIN;
     private double armPower = 1.0d;
-    private int vsPosition = 0;
+    public int vsPosition = 0;
     private double vsPower = 1.0d;
-    private double clawPosition = RobotPosition.CLAW_CLOSED;
-    private double wristPosition = RobotPosition.WRIST_IN;
+    public double clawPosition = RobotPosition.CLAW_CLOSED;
+    public double wristPosition = RobotPosition.WRIST_IN;
 
     public Robot(HardwareMap hardwareMap, Telemetry telemetry) {
         super(hardwareMap, telemetry);
     }
 
     @Override
-    protected void configureHardware() {
+    public void configureHardware() {
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "frontLeftMotor");

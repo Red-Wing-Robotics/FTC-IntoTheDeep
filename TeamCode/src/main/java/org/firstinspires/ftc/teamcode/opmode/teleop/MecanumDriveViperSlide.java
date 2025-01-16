@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.RobotPosition;
@@ -52,6 +54,7 @@ public class MecanumDriveViperSlide extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap, telemetry);
+        robot.configureHardware();
     }
 
     @Override
@@ -71,6 +74,9 @@ public class MecanumDriveViperSlide extends OpMode {
         // Servo Functionality
         // GAMEPAD 2 : X,Y,A,B
         controlServos();
+
+        // Log Position
+        logPosition();
 
         telemetry.update();
     }
@@ -97,6 +103,13 @@ public class MecanumDriveViperSlide extends OpMode {
         robot.leftBackDrive.setPower(backLeftPower);
         robot.rightFrontDrive.setPower(frontRightPower);
         robot.rightBackDrive.setPower(backRightPower);
+    }
+
+    private void logPosition() {
+        SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
+        telemetry.addData("Pox X", pos.x);
+        telemetry.addData("Pos Y", pos.y);
+        telemetry.addData("Heading", pos.h);
     }
 
     private void controlArm() {
@@ -134,11 +147,9 @@ public class MecanumDriveViperSlide extends OpMode {
             vsPos--;
         }
 
-        // 'Fudge factor' or 'wiggle' handled in the Robot class
-        // This should avoid the constant jerky nature of the viper slide
-        if ( vsPos != robot.vsMotor.getCurrentPosition() ){
-            robot.setViperSlidePosition(vsPos);
-        }
+        robot.vsMotor.setTargetPosition(vsPos);
+        robot.vsMotor.setPower(1.0d);
+        robot.vsMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Viper Slide Motor Position", robot.vsMotor.getCurrentPosition());
     }

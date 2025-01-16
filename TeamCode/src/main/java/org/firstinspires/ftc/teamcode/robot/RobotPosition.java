@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.robot;
 public class RobotPosition {
 
     static public final double CLAW_CLOSED = 0.3d;
-    static public final double CLAW_OPEN = 0.3d;
+    static public final double CLAW_OPEN = 0.6d;
     static public final double WRIST_IN = 0.1d;
     static public final double WRIST_MID = 0.45d;
     static public final double WRIST_DOWN = 0.85d;

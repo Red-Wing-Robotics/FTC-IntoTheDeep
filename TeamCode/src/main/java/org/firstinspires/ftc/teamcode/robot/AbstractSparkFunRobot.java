@@ -23,7 +23,7 @@ public abstract class AbstractSparkFunRobot extends AbstractRobot {
     }
 
     @Override
-    protected void configureHardware() {
+    public void configureHardware() {
         myOtos = hardwareMap.get(SparkFunOTOS.class, "SparkFun");
         configureOtos();
     }
@@ -44,7 +44,7 @@ public abstract class AbstractSparkFunRobot extends AbstractRobot {
 
         myOtos.setLinearUnit(linearUnit);
         myOtos.setAngularUnit(angleUnit);
-        myOtos.setOffset(offset);
+        //myOtos.setOffset(offset);
         double linearScalar = 1.121d;
         myOtos.setLinearScalar(linearScalar);
         double angularScalar = 1.018d;
@@ -55,7 +55,7 @@ public abstract class AbstractSparkFunRobot extends AbstractRobot {
         myOtos.resetTracking();
         // Allow sleep to reset tracking (likely not needed)
         sleep(2000);
-        myOtos.setPosition(startingPosition);
+        //myOtos.setPosition(startingPosition);
 
         // Get the hardware and firmware version
         SparkFunOTOS.Version hwVersion = new SparkFunOTOS.Version();

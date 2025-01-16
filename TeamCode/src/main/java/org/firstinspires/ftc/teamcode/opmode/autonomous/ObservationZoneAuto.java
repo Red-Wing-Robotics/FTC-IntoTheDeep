@@ -18,7 +18,7 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
 
     @Override
     void runOdometryDrive() {
-        robot.setArmPosition(RobotPosition.ARM_HANG_SPECIMEN);
+        robot.setArmPosition(RobotPosition.ARM_HIGH_RUNG);
         autoDrive(5, 22, 0, 2);
         autoDrive(50, 22, 0, 2);
         autoDrive(50, 30, 0, 2);
