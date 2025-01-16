@@ -141,14 +141,16 @@ public class MecanumDriveViperSlide extends OpMode {
         boolean canExtend = (robot.vsMotor.getCurrentPosition() > -1235 || robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE);
         boolean canRetract = robot.vsMotor.getCurrentPosition() < 0;
 
+        int VARIANCE = 50;
+
         if (gamepad1.x && canRetract ) {
-            vsPos++;
+            vsPos = Math.min(0, vsPos + VARIANCE);
         } else if (gamepad1.y && canExtend ) {
-            vsPos--;
+            vsPos = Math.max(-2050, vsPos - VARIANCE);
         }
 
         robot.vsMotor.setTargetPosition(vsPos);
-        robot.vsMotor.setPower(1.0d);
+        robot.vsMotor.setPower(1);
         robot.vsMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Viper Slide Motor Position", robot.vsMotor.getCurrentPosition());
