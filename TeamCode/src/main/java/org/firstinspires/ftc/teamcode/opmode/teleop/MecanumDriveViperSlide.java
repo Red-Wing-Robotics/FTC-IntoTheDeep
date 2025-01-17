@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.RobotPosition;
@@ -35,9 +34,9 @@ public class MecanumDriveViperSlide extends OpMode {
 
     // ARM ----------------------------------------
 
-    double armPos = 0; // the variable which the arm motor position will be set to
+    double armPos = RobotPosition.ARM_ORIGIN; // the variable which the arm motor position will be set to
     int posIdx = 0; // variable to track what index of ARM_POSITIONS is being used
-    int vsPos = 0;
+    int vsPos = RobotPosition.VIPER_SLIDE_ORIGIN;
 
     // variables telling whether or not the arm can be moved forward or backward
     boolean armForward = true;
@@ -141,16 +140,15 @@ public class MecanumDriveViperSlide extends OpMode {
         boolean canExtend = (robot.vsMotor.getCurrentPosition() > -1235 || robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE);
         boolean canRetract = robot.vsMotor.getCurrentPosition() < 0;
 
+        int VARIANCE = 50;
+
         if (gamepad1.x && canRetract ) {
-            vsPos++;
+            vsPos = Math.min(0, vsPos + VARIANCE);
         } else if (gamepad1.y && canExtend ) {
-            vsPos--;
+            vsPos = Math.max(RobotPosition.VIPER_SLIDE_FULLY_EXTENDED, vsPos - VARIANCE);
         }
 
-        robot.vsMotor.setTargetPosition(vsPos);
-        robot.vsMotor.setPower(1.0d);
-        robot.vsMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        robot.setViperSlidePosition(vsPos);
         telemetry.addData("Viper Slide Motor Position", robot.vsMotor.getCurrentPosition());
     }
 
