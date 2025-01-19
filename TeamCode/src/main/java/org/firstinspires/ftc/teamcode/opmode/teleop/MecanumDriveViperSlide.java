@@ -70,6 +70,10 @@ public class MecanumDriveViperSlide extends OpMode {
         // GAMEPAD 1 : X,Y
         controlViperSlide();
 
+        // Score in High Basket Function
+        // GAMEPAD 2 Right Bumper
+        scoreInHighBasket();
+
         // Servo Functionality
         // GAMEPAD 2 : X,Y,A,B
         controlServos();
@@ -110,7 +114,7 @@ public class MecanumDriveViperSlide extends OpMode {
         telemetry.addData("Pos Y", pos.y);
         telemetry.addData("Heading", pos.h);
     }
-
+    /*
     private void controlArm() {
         if (gamepad1.dpad_up && armForward && !gamepad1.dpad_down) {
             armForward = false;
@@ -135,16 +139,32 @@ public class MecanumDriveViperSlide extends OpMode {
         robot.setArmPosition((int) (armPos  + armPositionFudgeFactor));
         telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
     }
+    */
 
+    private void controlArm() {
+        if( gamepad1.dpad_down ){
+            armPos = RobotPosition.ARM_ORIGIN;
+        } else if ( gamepad1.dpad_right ) {
+            armPos = RobotPosition.ARM_SUBMERSIBLE;
+        } else if ( gamepad1.dpad_up ) {
+            armPos = RobotPosition.ARM_HIGH_RUNG;
+        } else if ( gamepad1.dpad_left ) {
+            armPos = RobotPosition.ARM_HIGH_BASKET;
+        }
+
+        armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
+        robot.setArmPosition((int) (armPos  + armPositionFudgeFactor));
+        telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
+    }
     private void controlViperSlide() {
         boolean canExtend = (robot.vsMotor.getCurrentPosition() > -1235 || robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE);
         boolean canRetract = robot.vsMotor.getCurrentPosition() < 0;
 
         int VARIANCE = 50;
 
-        if (gamepad1.x && canRetract ) {
+        if (gamepad2.dpad_down && canRetract ) {
             vsPos = Math.min(0, vsPos + VARIANCE);
-        } else if (gamepad1.y && canExtend ) {
+        } else if (gamepad2.dpad_up && canExtend ) {
             vsPos = Math.max(RobotPosition.VIPER_SLIDE_FULLY_EXTENDED, vsPos - VARIANCE);
         }
 
@@ -163,6 +183,17 @@ public class MecanumDriveViperSlide extends OpMode {
             robot.setWristPosition(RobotPosition.WRIST_DOWN);
         } else if (gamepad2.y) {
             robot.setWristPosition(RobotPosition.WRIST_MID);
+        }
+    }
+
+    private void scoreInHighBasket() {
+        if( gamepad2.right_bumper ){
+            robot.setWristPosition( RobotPosition.WRIST_MID );
+            robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_FULLY_EXTENDED );
+            robot.setWristPosition( RobotPosition.WRIST_DOWN );
+            robot.setClawPosition( RobotPosition.CLAW_OPEN );
+            robot.setWristPosition( RobotPosition.WRIST_MID );
+            robot.setViperSlidePosition( 0 );
         }
     }
 
