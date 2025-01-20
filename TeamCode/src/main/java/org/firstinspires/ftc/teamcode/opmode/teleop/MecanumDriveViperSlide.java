@@ -162,7 +162,7 @@ public class MecanumDriveViperSlide extends OpMode {
         if( gamepad1.dpad_up ){
             armPos++;
         }
-        else if ( gamepad1.dpad_down ){
+        else if ( gamepad1.dpad_down && robot.armMotor.getCurrentPosition() > 0 ){
             armPos--;
         }
 
