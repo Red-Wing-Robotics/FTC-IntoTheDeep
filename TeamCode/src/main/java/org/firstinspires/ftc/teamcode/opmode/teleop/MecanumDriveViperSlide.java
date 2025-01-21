@@ -70,9 +70,13 @@ public class MecanumDriveViperSlide extends OpMode {
         // GAMEPAD 1 : X,Y
         controlViperSlide();
 
-        // Score in High Basket Function
+        // Score in High Basket Method
         // GAMEPAD 2 Right Bumper
         scoreInHighBasket();
+
+        // Set up for hanging specimen method
+        // GAMEPAD 2 Left Bumper
+        hangSpecimen();
 
         // Servo Functionality
         // GAMEPAD 2 : X,Y,A,B
@@ -202,12 +206,13 @@ public class MecanumDriveViperSlide extends OpMode {
 
     private void scoreInHighBasket() {
         if( gamepad2.right_bumper ){
-            robot.setWristPosition( RobotPosition.WRIST_MID );
-            robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_FULLY_EXTENDED );
-            robot.setWristPosition( RobotPosition.WRIST_DOWN );
-            robot.setClawPosition( RobotPosition.CLAW_OPEN );
-            robot.setWristPosition( RobotPosition.WRIST_MID );
-            robot.setViperSlidePosition( 0 );
+            robot.scoreInHighBasket();
+        }
+    }
+
+    private void hangSpecimen(){
+        if( gamepad2.left_bumper ){
+            robot.hangSpecimen();
         }
     }
 
