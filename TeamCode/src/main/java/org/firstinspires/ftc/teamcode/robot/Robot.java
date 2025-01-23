@@ -131,4 +131,19 @@ public class Robot extends AbstractSparkFunRobot {
         vsMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    public void scoreInHighBasket() {
+        setWristPosition( RobotPosition.WRIST_MID );
+        setViperSlidePosition( RobotPosition.VIPER_SLIDE_FULLY_EXTENDED );
+        setWristPosition( RobotPosition.WRIST_DOWN );
+        setClawPosition( RobotPosition.CLAW_OPEN );
+        setWristPosition( RobotPosition.WRIST_MID );
+        setViperSlidePosition( 0 );
+    }
+
+    public void hangSpecimen(){
+        setArmPosition( RobotPosition.ARM_HANG_SPECIMEN );
+        setViperSlidePosition( RobotPosition.VIPER_SLIDE_HANG_SPECIMEN );
+        setWristPosition( RobotPosition.WRIST_IN );
+    }
+
 }

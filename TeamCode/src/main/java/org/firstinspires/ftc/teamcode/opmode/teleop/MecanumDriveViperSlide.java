@@ -27,7 +27,7 @@ public class MecanumDriveViperSlide extends OpMode {
             RobotPosition.ARM_HIGH_BASKET
     }; // arm positions array to cycle through
 
-    final double FUDGE_FACTOR = 5 * RobotPosition.ARM_TICKS_PER_DEGREE;
+    final double FUDGE_FACTOR = 10 * RobotPosition.ARM_TICKS_PER_DEGREE;
 
     //---------------------------------------------
     // LOCAL VARIABLES
@@ -71,6 +71,14 @@ public class MecanumDriveViperSlide extends OpMode {
         // GAMEPAD 1 : X,Y
         controlViperSlide();
 
+        // Score in High Basket Method
+        // GAMEPAD 2 Right Bumper
+        scoreInHighBasket();
+
+        // Set up for hanging specimen method
+        // GAMEPAD 2 Left Bumper
+        hangSpecimen();
+
         // Servo Functionality
         // GAMEPAD 2 : X,Y,A,B
         controlServos();
@@ -111,7 +119,7 @@ public class MecanumDriveViperSlide extends OpMode {
         telemetry.addData("Pos Y", pos.y);
         telemetry.addData("Heading", pos.h);
     }
-
+    /*
     private void controlArm() {
         if (gamepad1.dpad_up && armForward && !gamepad1.dpad_down) {
             armForward = false;
@@ -136,6 +144,36 @@ public class MecanumDriveViperSlide extends OpMode {
         robot.setArmPosition((int) (armPos  + armPositionFudgeFactor));
         telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
     }
+    */
+
+    private void controlArm() {
+        if( gamepad1.dpad_down ){
+            armPos = RobotPosition.ARM_ORIGIN;
+        } else if ( gamepad1.dpad_right ) {
+            armPos = RobotPosition.ARM_SUBMERSIBLE;
+        } else if ( gamepad1.dpad_up ) {
+            armPos = RobotPosition.ARM_HIGH_RUNG;
+        } else if ( gamepad1.dpad_left ) {
+            armPos = RobotPosition.ARM_HIGH_BASKET;
+        }
+
+        armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
+        robot.setArmPosition((int) (armPos  + armPositionFudgeFactor));
+        telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
+    }
+
+    /*
+    private void controlArm(){
+        if( gamepad1.dpad_up ){
+            armPos++;
+        }
+        else if ( gamepad1.dpad_down && robot.armMotor.getCurrentPosition() > 0 ){
+            armPos--;
+        }
+
+        robot.setArmPosition( (int)(armPos * RobotPosition.ARM_TICKS_PER_DEGREE) );
+        telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
+    } */
 
     private void controlViperSlide() {
         boolean canExtend = (robot.vsMotor.getCurrentPosition() > -1235 || robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE);
@@ -143,9 +181,9 @@ public class MecanumDriveViperSlide extends OpMode {
 
         int VARIANCE = 50;
 
-        if (gamepad1.x && canRetract ) {
+        if (gamepad2.dpad_down && canRetract ) {
             vsPos = Math.min(0, vsPos + VARIANCE);
-        } else if (gamepad1.y && canExtend ) {
+        } else if (gamepad2.dpad_up && canExtend ) {
             vsPos = Math.max(RobotPosition.VIPER_SLIDE_FULLY_EXTENDED, vsPos - VARIANCE);
         }
 
@@ -164,6 +202,18 @@ public class MecanumDriveViperSlide extends OpMode {
             robot.setWristPosition(RobotPosition.WRIST_DOWN);
         } else if (gamepad2.y) {
             robot.setWristPosition(RobotPosition.WRIST_MID);
+        }
+    }
+
+    private void scoreInHighBasket() {
+        if( gamepad2.right_bumper ){
+            robot.scoreInHighBasket();
+        }
+    }
+
+    private void hangSpecimen(){
+        if( gamepad2.left_bumper ){
+            robot.hangSpecimen();
         }
     }
 

@@ -17,11 +17,11 @@ public class NetZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
     @Override
     void runOdometryDrive() {
         autoDrive(49, 0, 0, 2);
-        autoDrive(49, -9, 0, 2);
-        autoDrive(0, -9, 0, 2);
-        autoDrive(49, -9, 0, 2);
-        autoDrive(49, -19, 0, 2);
-        autoDrive(2, -19, 0, 2);
+        autoDrive(49, -11, 0, 2);
+        autoDrive(5, -11, 0, 2);
+        autoDrive(49, -11, 0, 2);
+        autoDrive(49, -21, 0, 2);
+        autoDrive(5, -21, 0, 2);
     }
 
 }
