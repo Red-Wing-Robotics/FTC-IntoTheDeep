@@ -134,16 +134,21 @@ public class Robot extends AbstractSparkFunRobot {
     public void scoreInHighBasket() {
         setWristPosition( RobotPosition.WRIST_MID );
         setViperSlidePosition( RobotPosition.VIPER_SLIDE_FULLY_EXTENDED );
+        sleep(700);
         setWristPosition( RobotPosition.WRIST_DOWN );
+        sleep(700);
         setClawPosition( RobotPosition.CLAW_OPEN );
+        sleep(50);
         setWristPosition( RobotPosition.WRIST_MID );
+        sleep(100);
         setViperSlidePosition( 0 );
     }
 
     public void hangSpecimen(){
         setArmPosition( RobotPosition.ARM_HANG_SPECIMEN );
         setViperSlidePosition( RobotPosition.VIPER_SLIDE_HANG_SPECIMEN );
-        setWristPosition( RobotPosition.WRIST_IN );
+        setWristPosition( RobotPosition.WRIST_SPECIMEN );
+        sleep(700);
     }
 
 }

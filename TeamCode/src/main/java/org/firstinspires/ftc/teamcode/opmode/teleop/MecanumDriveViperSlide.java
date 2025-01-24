@@ -26,7 +26,7 @@ public class MecanumDriveViperSlide extends OpMode {
             RobotPosition.ARM_HIGH_BASKET
     }; // arm positions array to cycle through
 
-    final double FUDGE_FACTOR = 10 * RobotPosition.ARM_TICKS_PER_DEGREE;
+    final double FUDGE_FACTOR = 7 * RobotPosition.ARM_TICKS_PER_DEGREE;
 
     //---------------------------------------------
     // LOCAL VARIABLES
@@ -41,6 +41,9 @@ public class MecanumDriveViperSlide extends OpMode {
     // variables telling whether or not the arm can be moved forward or backward
     boolean armForward = true;
     boolean armBackward = true;
+
+    boolean scoringInBasket = false;
+    boolean scoringOnChamber = false;
 
     double armPositionFudgeFactor = 0.0d;
 
@@ -151,7 +154,7 @@ public class MecanumDriveViperSlide extends OpMode {
         } else if ( gamepad1.dpad_right ) {
             armPos = RobotPosition.ARM_SUBMERSIBLE;
         } else if ( gamepad1.dpad_up ) {
-            armPos = RobotPosition.ARM_HIGH_RUNG;
+            armPos = RobotPosition.ARM_HANG_SPECIMEN;
         } else if ( gamepad1.dpad_left ) {
             armPos = RobotPosition.ARM_HIGH_BASKET;
         }
@@ -161,7 +164,7 @@ public class MecanumDriveViperSlide extends OpMode {
         telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
     }
 
-    /*
+/*
     private void controlArm(){
         if( gamepad1.dpad_up ){
             armPos++;
@@ -172,8 +175,8 @@ public class MecanumDriveViperSlide extends OpMode {
 
         robot.setArmPosition( (int)(armPos * RobotPosition.ARM_TICKS_PER_DEGREE) );
         telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
-    } */
-
+    }
+*/
     private void controlViperSlide() {
         boolean canExtend = (robot.vsMotor.getCurrentPosition() > -1235 || robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE);
         boolean canRetract = robot.vsMotor.getCurrentPosition() < 0;
@@ -205,14 +208,28 @@ public class MecanumDriveViperSlide extends OpMode {
     }
 
     private void scoreInHighBasket() {
-        if( gamepad2.right_bumper ){
+        if( gamepad2.right_bumper && !scoringInBasket ) {
+            scoringInBasket = true;
             robot.scoreInHighBasket();
+            scoringInBasket = false;
         }
     }
 
     private void hangSpecimen(){
-        if( gamepad2.left_bumper ){
+        if( gamepad2.left_bumper && !scoringOnChamber){
+            scoringOnChamber = true;
             robot.hangSpecimen();
+            vsPos = robot.vsMotor.getCurrentPosition();
+            armPos = robot.armMotor.getCurrentPosition();
+            scoringOnChamber = false;
+        }
+    }
+
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
