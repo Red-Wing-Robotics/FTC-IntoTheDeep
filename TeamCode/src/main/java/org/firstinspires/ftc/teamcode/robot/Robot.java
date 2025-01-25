@@ -139,8 +139,8 @@ public class Robot extends AbstractSparkFunRobot {
         sleep(700);
         setClawPosition( RobotPosition.CLAW_OPEN );
         sleep(50);
-        setWristPosition( RobotPosition.WRIST_MID );
-        sleep(100);
+        setWristPosition( RobotPosition.WRIST_SPECIMEN );
+        sleep(500);
         setViperSlidePosition( 0 );
     }
 
