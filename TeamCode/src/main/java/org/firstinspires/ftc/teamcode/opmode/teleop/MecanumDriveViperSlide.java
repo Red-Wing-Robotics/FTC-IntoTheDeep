@@ -27,7 +27,7 @@ public class MecanumDriveViperSlide extends OpMode {
             RobotPosition.ARM_HIGH_BASKET
     }; // arm positions array to cycle through
 
-    final double FUDGE_FACTOR = 7 * RobotPosition.ARM_TICKS_PER_DEGREE;
+    final double FUDGE_FACTOR = 4 * RobotPosition.ARM_TICKS_PER_DEGREE;
 
     //---------------------------------------------
     // LOCAL VARIABLES
