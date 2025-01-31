@@ -21,12 +21,13 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
     @Override
     void runOdometryDrive() {
         robot.hangSpecimen();
-        autoDrive( 33, -14, 0, 2);
+        autoDrive( 27, -14, 0, 2);
         sleep(750);
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
         robot.setViperSlidePosition( 0 );
         sleep(700);
-        autoDrive(5, 22, 0, 2);
+        autoDrive(20, -14,0,2);
+        autoDrive(20, 22, 0, 2);
         robot.setArmPosition( RobotPosition.ARM_ORIGIN );
         robot.setWristPosition( RobotPosition.WRIST_IN );
         autoDrive(50, 22, 0, 2);
