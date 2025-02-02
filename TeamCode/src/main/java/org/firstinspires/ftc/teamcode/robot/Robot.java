@@ -11,10 +11,10 @@ public class Robot extends AbstractSparkFunRobot {
 
     // Motors --------------------------------------------------------
 
-    public DcMotor leftFrontDrive = null;
-    public DcMotor leftBackDrive = null;
-    public DcMotor rightFrontDrive = null;
-    public DcMotor rightBackDrive = null;
+    private DcMotor leftFrontDrive = null;
+    private DcMotor leftBackDrive = null;
+    private DcMotor rightFrontDrive = null;
+    private DcMotor rightBackDrive = null;
     public DcMotor armMotor = null;
     public DcMotor vsMotor = null;
 
@@ -31,6 +31,8 @@ public class Robot extends AbstractSparkFunRobot {
     private double vsPower = 1.0d;
     public double clawPosition = RobotPosition.CLAW_CLOSED;
     public double wristPosition = RobotPosition.WRIST_IN;
+
+    private boolean isDriveEnabled = true;
 
     public Robot(HardwareMap hardwareMap, Telemetry telemetry) {
         super(hardwareMap, telemetry);
@@ -75,6 +77,27 @@ public class Robot extends AbstractSparkFunRobot {
 
         // Run configureHardware in parent class (which initializes sparkfun chip)
         super.configureHardware();
+    }
+
+    public void disableDriveControls() {
+        setDrivePower(0,0,0,0);
+        isDriveEnabled = false;
+    }
+
+    public void enableDriveControls() {
+        isDriveEnabled = true;
+    }
+
+    public void setDrivePower(double frontLeft, double backLeft, double frontRight, double backRight) {
+        if(isDriveEnabled) {
+            leftFrontDrive.setPower(frontLeft);
+            leftBackDrive.setPower(backLeft);
+            rightFrontDrive.setPower(frontRight);
+            rightBackDrive.setPower(backRight);
+        } else {
+            telemetry.addData("DRIVE", "Cannot drive as drive disabled");
+            telemetry.update();
+        }
     }
 
     public void setArmPosition( int pos, double power ) {
@@ -132,6 +155,7 @@ public class Robot extends AbstractSparkFunRobot {
     }
 
     public void scoreInHighBasket() {
+        disableDriveControls();
         setWristPosition( RobotPosition.WRIST_MID );
         setViperSlidePosition( RobotPosition.VIPER_SLIDE_FULLY_EXTENDED );
         sleep(700);
@@ -142,6 +166,7 @@ public class Robot extends AbstractSparkFunRobot {
         setWristPosition( RobotPosition.WRIST_SPECIMEN );
         sleep(500);
         setViperSlidePosition( 0 );
+        enableDriveControls();
     }
 
     public void hangSpecimen(){

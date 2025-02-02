@@ -160,10 +160,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         }
 
         // Send powers to the wheels.
-        robot.leftFrontDrive.setPower(leftFrontPower);
-        robot.rightFrontDrive.setPower(rightFrontPower);
-        robot.leftBackDrive.setPower(leftBackPower);
-        robot.rightBackDrive.setPower(rightBackPower);
+        robot.setDrivePower(leftFrontPower, leftBackPower, rightFrontPower, rightBackPower);
         sleep(10);
     }
 
