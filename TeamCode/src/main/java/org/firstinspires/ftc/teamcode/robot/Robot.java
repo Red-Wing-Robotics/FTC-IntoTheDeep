@@ -77,6 +77,7 @@ public class Robot extends AbstractSparkFunRobot {
 
         // Run configureHardware in parent class (which initializes sparkfun chip)
         super.configureHardware();
+        telemetry.speak("Lieutenant Lobster initialized", "en", "us");
     }
 
     public void disableDriveControls() {

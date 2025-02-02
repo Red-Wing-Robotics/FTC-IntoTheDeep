@@ -35,6 +35,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         while(!isStarted()) {
             // Wait for the game to start (driver presses PLAY)
             telemetry.addData("Status", "Initialized");
+            telemetry.speak("Lieutenant Lobster initialized", "en", "us");
             telemetry.update();
         }
 
