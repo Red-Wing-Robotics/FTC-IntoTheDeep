@@ -170,10 +170,12 @@ public class Robot extends AbstractSparkFunRobot {
     }
 
     public void hangSpecimen(){
+        disableDriveControls();
         setArmPosition( RobotPosition.ARM_HANG_SPECIMEN );
         setViperSlidePosition( RobotPosition.VIPER_SLIDE_HANG_SPECIMEN );
         setWristPosition( RobotPosition.WRIST_MID );
         sleep(850);
+        enableDriveControls();
     }
 
 }

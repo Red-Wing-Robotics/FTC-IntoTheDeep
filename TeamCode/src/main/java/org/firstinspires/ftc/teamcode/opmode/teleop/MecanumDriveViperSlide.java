@@ -110,10 +110,7 @@ public class MecanumDriveViperSlide extends OpMode {
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        robot.leftFrontDrive.setPower(frontLeftPower);
-        robot.leftBackDrive.setPower(backLeftPower);
-        robot.rightFrontDrive.setPower(frontRightPower);
-        robot.rightBackDrive.setPower(backRightPower);
+        robot.setDrivePower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
     }
 
     private void logPosition() {
