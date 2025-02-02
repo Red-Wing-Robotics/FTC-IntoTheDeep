@@ -133,6 +133,42 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         return(new SparkFunOTOS.Pose2D(pos.y, pos.x, -pos.h));
     }
 
+    final double ROTATE_FUDGE_FACTOR = 1.0d;
+
+    void rotateRobot(double targetHeading, int maxTime) {
+        boolean hasArrived = false;
+        runtime.reset();
+
+        while(opModeIsActive() && (runtime.milliseconds() < maxTime*1000) && !hasArrived) {
+            SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
+
+            double distanceToRotate = Math.abs(targetHeading - pos.h);
+            boolean movingPositive = true;
+
+            if(!shouldKeepRotating(targetHeading, movingPositive)) {
+                robot.leftFrontDrive.setPower(0);
+                robot.leftBackDrive.setPower(0);
+                robot.rightFrontDrive.setPower(0);
+                robot.rightBackDrive.setPower(0);
+                hasArrived = true;
+            } else {
+                double rotationPower = (Math.abs(distanceToRotate) < 10) ? 0.5 : 1;
+                robot.leftFrontDrive.setPower(movingPositive ? rotationPower : -rotationPower);
+                robot.leftBackDrive.setPower(movingPositive ? rotationPower : -rotationPower);
+                robot.rightFrontDrive.setPower(movingPositive ? -rotationPower : rotationPower);
+                robot.rightBackDrive.setPower(movingPositive ? -rotationPower : rotationPower);
+            }
+        }
+    }
+
+    boolean shouldKeepRotating(double targetHeading, boolean movingPositive) {
+        SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
+        return !(Math.abs(targetHeading - pos.h) < ROTATE_FUDGE_FACTOR);
+    }
+
+    // Start at 6 heading to 180
+    // Start at 10 heading to -160
+
     /**
      * Move robot according to desired axes motions assuming robot centric point of view
      * Positive X is forward
