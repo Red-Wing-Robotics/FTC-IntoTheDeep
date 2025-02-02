@@ -12,13 +12,13 @@ public class RobotPosition {
     static public final int ARM_ORIGIN = 0;
     static public final int ARM_SUBMERSIBLE = (int)(30 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_SUBMERSIBLE2 = (int)(40 * ARM_TICKS_PER_DEGREE);
-    static public final int ARM_HANG_SPECIMEN = (int)(65 * ARM_TICKS_PER_DEGREE);
+    static public final int ARM_HANG_SPECIMEN = (int)(62.5 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_HIGH_RUNG = (int)(75 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_LOW_BASKET = (int)(80 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_HIGH_BASKET = (int)(110 * ARM_TICKS_PER_DEGREE);
     static public final int VIPER_SLIDE_FULLY_EXTENDED = -2050;
     static public final int VIPER_SLIDE_ORIGIN = 0;
-    static public final int VIPER_SLIDE_HANG_SPECIMEN = -1000;
+    static public final int VIPER_SLIDE_HANG_SPECIMEN = -500;
 
 
 }

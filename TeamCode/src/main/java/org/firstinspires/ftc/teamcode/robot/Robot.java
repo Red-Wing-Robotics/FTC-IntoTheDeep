@@ -171,9 +171,9 @@ public class Robot extends AbstractSparkFunRobot {
 
     public void hangSpecimen(){
         setArmPosition( RobotPosition.ARM_HANG_SPECIMEN );
-        setViperSlidePosition( 0 );
+        setViperSlidePosition( RobotPosition.VIPER_SLIDE_HANG_SPECIMEN );
         setWristPosition( RobotPosition.WRIST_MID );
-        sleep(700);
+        sleep(850);
     }
 
 }
