@@ -25,7 +25,7 @@ public abstract class AbstractSparkFunRobot extends AbstractRobot {
     @Override
     public void configureHardware() {
         myOtos = hardwareMap.get(SparkFunOTOS.class, "SparkFun");
-        configureOtos();
+        //configureOtos();
     }
 
     public final void sleep(long milliseconds) {
