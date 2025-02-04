@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.util;
 
 // Borrowed from pedro pathing
 
-import android.util.Log;
-
 public class MathUtils {
 
     public static double normalizeAngle(double angleRadians) {
@@ -20,10 +18,7 @@ public class MathUtils {
      * @return returns the turn direction.
      */
     public static boolean shouldTurnClockwise(double startHeading, double endHeading) {
-        if (normalizeAngle(endHeading - startHeading) >= 0 && normalizeAngle(endHeading - startHeading) <= Math.PI) {
-            return true;
-        }
-        return false;
+        return normalizeAngle(endHeading - startHeading) >= 0 && normalizeAngle(endHeading - startHeading) <= Math.PI;
     }
 
     
