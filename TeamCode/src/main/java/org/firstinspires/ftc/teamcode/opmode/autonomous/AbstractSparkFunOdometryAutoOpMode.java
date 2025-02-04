@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.util.MathUtils;
 
 /**
  *
@@ -55,7 +56,12 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
      * Move robot to a designated X,Y position and heading
      * set the maxTime to have the driving logic timeout after a number of seconds.
      */
-    private void otosDrive(double targetX, double targetY, double targetHeading, int maxTime, int armPos, double armPower, int vsPos, double vsPower, double clawPos, double wristPos ) {
+
+    public void autoDrive(double targetX, double targetY, double targetHeading, int maxTime) {
+        autoDrive(targetX, targetY, targetHeading, maxTime, "No Phase");
+    }
+
+    public void autoDrive(double targetX, double targetY, double targetHeading, int maxTime, String phase) {
 
         double drive, strafe, turn;
         double xError, yError, yawError;
@@ -75,7 +81,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
                 drive = Range.clip(xError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
                 strafe = Range.clip(yError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-                turn = Range.clip(yawError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+                turn = 0;//Range.clip(yawError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
 
                 telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
 
@@ -93,13 +99,12 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             yawError = targetHeading-currentPos.h;
 
             // Set arm, claw, wrist, and slide positions
-            robot.setArmPosition(armPos, armPower);
-            robot.setViperSlidePosition(vsPos, vsPower);
-            robot.setWristPosition(wristPos);
-            robot.setClawPosition(clawPos);
             robot.setRobotAttachmentPositions();
 
             // current x,y swapped due to 90 degree rotation
+            telemetry.addData("Phase", phase);
+            telemetry.addData("Status", "navigating");
+            telemetry.addData("current X coordinate", currentPos.x);
             telemetry.addData("current X coordinate", currentPos.x);
             telemetry.addData("current Y coordinate", currentPos.y);
             telemetry.addData("current Heading angle", currentPos.h);
@@ -109,6 +114,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             telemetry.addData("xError", xError);
             telemetry.addData("yError", yError);
             telemetry.addData("yawError", yawError);
+
             telemetry.update();
         }
 
@@ -118,9 +124,18 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         // Set robot position
         currentPos = myPosition();
 
+        telemetry.addData("Phase", phase);
+        telemetry.addData("Status", "completed");
+        telemetry.addData("current X coordinate", currentPos.x);
         telemetry.addData("current X coordinate", currentPos.x);
         telemetry.addData("current Y coordinate", currentPos.y);
         telemetry.addData("current Heading angle", currentPos.h);
+        telemetry.addData("target X coordinate", "");
+        telemetry.addData("target Y coordinate", "");
+        telemetry.addData("target Heading angle", "");
+        telemetry.addData("xError", "");
+        telemetry.addData("yError", "");
+        telemetry.addData("yawError", "");
         telemetry.update();
     }
 
@@ -130,7 +145,78 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     SparkFunOTOS.Pose2D myPosition() {
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
         //noinspection SuspiciousNameCombination
-        return(new SparkFunOTOS.Pose2D(pos.y, pos.x, -pos.h));
+        return(new SparkFunOTOS.Pose2D(pos.y, pos.x, pos.h));
+        //return robot.myOtos.getPosition();
+    }
+
+    final double ROTATE_FUDGE_FACTOR = 4.0d;
+
+    public void rotateRobot(double targetHeading, int maxTime, String phase) {
+        boolean hasArrived = false;
+        runtime.reset();
+
+        boolean shouldTurnClockwise = MathUtils.shouldTurnClockwise(Math.toRadians(myPosition().h), Math.toRadians(targetHeading));
+
+        while(opModeIsActive() && (runtime.milliseconds() < maxTime*1000) && !hasArrived) {
+
+            SparkFunOTOS.Pose2D currentPos = myPosition();
+            double distanceToRotate = Math.abs(targetHeading - myPosition().h);
+
+            if(!shouldKeepRotating(targetHeading)) {
+                robot.setDrivePower(0,0,0,0);
+                hasArrived = true;
+
+                telemetry.addData("Phase", phase);
+                telemetry.addData("Status", "completed");
+                telemetry.addData("current X coordinate", currentPos.x);
+                telemetry.addData("current X coordinate", currentPos.x);
+                telemetry.addData("current Y coordinate", currentPos.y);
+                telemetry.addData("current Heading angle", currentPos.h);
+                telemetry.addData("target X coordinate", "");
+                telemetry.addData("target Y coordinate", "");
+                telemetry.addData("target Heading angle", targetHeading);
+                telemetry.addData("xError", "");
+                telemetry.addData("yError", "");
+                telemetry.addData("yawError", distanceToRotate);
+                telemetry.update();
+            } else {
+                double rotationPower = getRotationSpeed(distanceToRotate);
+                robot.setDrivePower(shouldTurnClockwise ? rotationPower : -rotationPower,
+                        shouldTurnClockwise ? rotationPower : -rotationPower,
+                        shouldTurnClockwise ? -rotationPower : rotationPower,
+                        shouldTurnClockwise ? -rotationPower : rotationPower);
+            }
+
+        }
+        SparkFunOTOS.Pose2D currentPos = myPosition();
+
+        telemetry.addData("Phase", phase);
+        telemetry.addData("Status", "completed");
+        telemetry.addData("current X coordinate", currentPos.x);
+        telemetry.addData("current Y coordinate", currentPos.y);
+        telemetry.addData("current Heading angle", currentPos.h);
+        telemetry.addData("target X coordinate", "");
+        telemetry.addData("target Y coordinate", "");
+        telemetry.addData("target Heading angle", "");
+        telemetry.addData("xError", "");
+        telemetry.addData("yError", "");
+        telemetry.addData("yawError", "");
+        telemetry.update();
+    }
+
+    double getRotationSpeed(double distanceToRotate) {
+        if(Math.abs(distanceToRotate) < 5) {
+            return 0.25;
+        }
+        if(Math.abs(distanceToRotate) < 10) {
+            return 0.5;
+        }
+        return 1.0;
+    }
+
+    boolean shouldKeepRotating(double targetHeading) {
+        SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
+        return !(Math.abs(targetHeading - pos.h) < ROTATE_FUDGE_FACTOR);
     }
 
     /**
@@ -162,37 +248,6 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         // Send powers to the wheels.
         robot.setDrivePower(leftFrontPower, leftBackPower, rightFrontPower, rightBackPower);
         sleep(10);
-    }
-
-    public void autoDrive( double targetX, double targetY, double targetHeading, int maxTime) {
-        otosDrive(
-                targetX,
-                targetY,
-                targetHeading,
-                maxTime,
-                robot.armPosition,
-                1.0d,
-                robot.vsPosition,
-                1.0d,
-                robot.clawPosition,
-                robot.wristPosition
-        );
-    }
-
-    @SuppressWarnings("unused")
-    public void autoDrive( double targetX, double targetY, double targetHeading, int maxTime, int armPos, double armPower, int vsPos, double vsPower, double clawPos, double wristPos ) {
-        otosDrive(
-                targetX,
-                targetY,
-                targetHeading,
-                maxTime,
-                armPos,
-                armPower,
-                vsPos,
-                vsPower,
-                clawPos,
-                wristPos
-        );
     }
 
 }
