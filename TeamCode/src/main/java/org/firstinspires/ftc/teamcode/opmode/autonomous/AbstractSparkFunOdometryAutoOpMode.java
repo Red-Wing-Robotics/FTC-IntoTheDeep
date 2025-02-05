@@ -142,11 +142,16 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     /* the reported OTOS values are based on sensor orientation, convert to robot centric
         by swapping x and y and changing the sign of the heading
         */
-    SparkFunOTOS.Pose2D myPosition() {
+//    SparkFunOTOS.Pose2D myPosition() {
+//        SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
+//        //noinspection SuspiciousNameCombination
+//        return(new SparkFunOTOS.Pose2D(pos.y, pos.x, pos.h));
+//        //return robot.myOtos.getPosition();
+//    }
+
+    public SparkFunOTOS.Pose2D myPosition() {
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
-        //noinspection SuspiciousNameCombination
-        return(new SparkFunOTOS.Pose2D(pos.y, pos.x, pos.h));
-        //return robot.myOtos.getPosition();
+        return new SparkFunOTOS.Pose2D(pos.x, pos.y, -pos.h);
     }
 
     final double ROTATE_FUDGE_FACTOR = 4.0d;
@@ -204,6 +209,66 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         telemetry.update();
     }
 
+    public void otosDrive(double targetX, double targetY, double targetHeading, int maxTime) {
+        double drive, strafe, turn;
+        double currentRange, targetRange, initialBearing, targetBearing, xError, yError, yawError;
+        double opp, adj;
+
+        SparkFunOTOS.Pose2D currentPos = myPosition();
+        xError = targetX-currentPos.x;
+        yError = targetY-currentPos.y;
+        yawError = targetHeading-currentPos.h;
+
+        runtime.reset();
+
+        //while(opModeIsActive() && (runtime.milliseconds() < maxTime*1000) &&
+        while(  (runtime.milliseconds() < maxTime*1000) &&
+                ((Math.abs(xError) > 1) || (Math.abs(yError) > 1) || (Math.abs(yawError) > 2)) ) {
+
+            double currentYawRadians = currentPos.h*3.1415/180;
+            double rotX = xError * Math.cos(currentYawRadians) - yError * Math.sin(currentYawRadians);
+            double rotY = xError * Math.sin(currentYawRadians) + yError * Math.cos(currentYawRadians);
+
+            // Use the speed and turn "gains" to calculate how we want the robot to move.
+//            drive  = Range.clip(yError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+//            strafe = Range.clip(xError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+//            turn   = Range.clip(yawError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+            drive  = Range.clip(rotY * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+            strafe = Range.clip(rotX * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+            turn   = Range.clip(yawError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+/*
+            telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+            // current x,y swapped due to 90 degree rotation
+            telemetry.addData("current X coordinate", currentPos.x);
+            telemetry.addData("current Y coordinate", currentPos.y);
+            telemetry.addData("current Heading angle", currentPos.h);
+            telemetry.addData("target X coordinate", targetX);
+            telemetry.addData("target Y coordinate", targetY);
+            telemetry.addData("target Heading angle", targetHeading);
+            telemetry.addData("xError", xError);
+            telemetry.addData("yError", yError);
+            telemetry.addData("yawError", yawError);
+            telemetry.update();
+*/
+            // Apply desired axes motions to the drivetrain.
+            moveRobot(drive, strafe, turn);
+
+            // then recalc error
+            currentPos = myPosition();
+            xError = targetX-currentPos.x;
+            yError = targetY-currentPos.y;
+            yawError = targetHeading-currentPos.h;
+        }
+        moveRobot(0,0,0);
+        //currentPos = myPosition();
+        /*
+        telemetry.addData("current X c oordinate", currentPos.x);
+        telemetry.addData("current Y coordinate", currentPos.y);
+        telemetry.addData("current Heading angle", currentPos.h);
+        telemetry.update();
+         */
+    }
+
     double getRotationSpeed(double distanceToRotate) {
         if(Math.abs(distanceToRotate) < 5) {
             return 0.25;
@@ -247,7 +312,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
         // Send powers to the wheels.
         robot.setDrivePower(leftFrontPower, leftBackPower, rightFrontPower, rightBackPower);
-        sleep(10);
+        //sleep(10);
     }
 
 }
