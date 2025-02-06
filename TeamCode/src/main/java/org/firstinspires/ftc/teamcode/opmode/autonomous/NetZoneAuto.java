@@ -19,14 +19,14 @@ public class NetZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
     @Override
     void runOdometryDrive() {
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
-        autoDrive(2,-7,0,2);
-        autoDrive(2,0,0,2);
-        autoDrive(49, 0, 0, 2);
-        autoDrive(49, -11, 0, 2);
-        autoDrive(5, -14, 0, 2);
-        autoDrive(49, -11, 0, 2);
-        autoDrive(49, -21, 0, 2);
-        autoDrive(7, -21, 0, 2);
+        autoDrive(-7,2,0,2);
+        autoDrive(0,2,0,2);
+        autoDrive(0, 49, 0, 2);
+        autoDrive(-11, 49, 0, 2);
+        autoDrive(-14, 5, 0, 2);
+        autoDrive(-11, 49, 0, 2);
+        autoDrive(-21, 49, 0, 2);
+        autoDrive(-21, 7, 0, 2);
     }
 
 }

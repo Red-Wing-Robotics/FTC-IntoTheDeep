@@ -45,10 +45,11 @@ public abstract class AbstractSparkFunRobot extends AbstractRobot {
         myOtos.setLinearUnit(linearUnit);
         myOtos.setAngularUnit(angleUnit);
         myOtos.setOffset(offset);
-        double linearScalar = 1.121d;
-        myOtos.setLinearScalar(linearScalar);
-        double angularScalar = 1.018d;
+        double angularScalar = 1.00896539d;
         myOtos.setAngularScalar(angularScalar);
+
+        double linearScalar = 1.127d;
+        myOtos.setLinearScalar(linearScalar);
         myOtos.calibrateImu();
         // Allow sleep for calibration to complete
         sleep(2000);

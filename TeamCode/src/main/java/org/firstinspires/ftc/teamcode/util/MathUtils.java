@@ -17,9 +17,12 @@ public class MathUtils {
      *
      * @return returns the turn direction.
      */
-    public static boolean shouldTurnClockwise(double startHeading, double endHeading) {
-        return normalizeAngle(endHeading - startHeading) >= 0 && normalizeAngle(endHeading - startHeading) <= Math.PI;
+    public static boolean shouldTurnClockwiseRadians(double startHeading, double endHeading) {
+        return !(normalizeAngle(endHeading - startHeading) >= 0 && normalizeAngle(endHeading - startHeading) <= Math.PI);
     }
 
+    public static boolean shouldTurnClockwiseDegrees(double startHeading, double endHeading) {
+        return shouldTurnClockwiseRadians(Math.toRadians(startHeading), Math.toRadians(endHeading));
+    }
     
 }
