@@ -13,6 +13,7 @@ public abstract class AbstractSparkFunRobot extends AbstractRobot {
 
     public SparkFunOTOS myOtos;
 
+    @SuppressWarnings("unused")
     private final SparkFunOTOS.Pose2D startingPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
     private final SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
     private final DistanceUnit linearUnit = DistanceUnit.INCH;
