@@ -10,8 +10,8 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
 
     @Override
     void configureAutoDrive() {
-        SPEED_GAIN  =  0.1;
-        STRAFE_GAIN =  0.2;
+        SPEED_GAIN  =  0.05;
+        STRAFE_GAIN =  0.1;
         TURN_GAIN = 0.1;
         MAX_AUTO_SPEED = 1d;
         MAX_AUTO_STRAFE = 1d;
@@ -21,24 +21,35 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
     @Override
     void runOdometryDrive() {
         robot.hangSpecimen();
-        autoDrive( -14, 27, 0, 2);
+        autoDrive( -5, 28, 0, 5);
         sleep(750);
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
         robot.setViperSlidePosition( 0 );
         sleep(700);
-        autoDrive(-14, 20,0,2);
-        autoDrive(22, 20, 0, 2);
+        autoDrive(-5, 18,0,5);
         robot.setArmPosition( RobotPosition.ARM_ORIGIN );
         robot.setWristPosition( RobotPosition.WRIST_IN );
-        autoDrive(22, 50, 180, 2);
-        autoDrive(32, 50, 180, 2);
-        autoDrive(32, 5, 180, 2);
-        autoDrive(32, 50, 180, 2);
-        autoDrive(41, 50, 180, 2);
-        autoDrive(41, 5, 180, 2);
-        //autoDrive(55, 41, 0, 2);
-        //autoDrive(55, 48, 0, 2);
-        //autoDrive(5, 48, 0, 2);
+        autoDrive(24, 18, 180, 5);
+        autoDrive(24, 51, 180, 5);
+        autoDrive(37, 51, 180, 5);
+        autoDrive(37, 7, 180, 5);
+        autoDrive(37, 51, 180, 5);
+        autoDrive(44, 51, 180, 5);
+        autoDrive(44, 7, 180, 5);
+        autoDrive(44, 18, 180, 5);
+        autoDrive(38, 18, 180, 5);
+        robot.setArmPosition(RobotPosition.ARM_SUBMERSIBLE);
+        robot.setClawPosition( RobotPosition.CLAW_OPEN );
+        robot.setWristPosition( RobotPosition.WRIST_MID );
+        autoDrive(38, 7, 180, 5);
+        sleep(1000);
+        robot.setClawPosition( RobotPosition.CLAW_CLOSED );
+        sleep(500);
+        robot.setArmPosition( RobotPosition.ARM_SUBMERSIBLE2 );
+        robot.hangSpecimen();
+        autoDrive(-7,8,0,5);
+        autoDrive(-7,28,0,5);
+
     }
 
 }
