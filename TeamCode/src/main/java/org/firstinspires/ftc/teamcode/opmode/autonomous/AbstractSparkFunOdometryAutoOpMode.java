@@ -58,7 +58,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         return new SparkFunOTOS.Pose2D(pos.x, pos.y, pos.h);
     }
 
-    public void rotateRobot(double targetHeading, boolean shouldTurnClockwise) {
+    private void rotateRobot(double targetHeading, boolean shouldTurnClockwise) {
         double distanceToRotate = Math.abs(targetHeading - myPosition().h);
         double rotationPower = getRotationSpeed(distanceToRotate);
         robot.setDrivePower(shouldTurnClockwise ? rotationPower : -rotationPower,
@@ -132,7 +132,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         sleep(100);
     }
 
-    double getRotationSpeed(double distanceToRotate) {
+    private double getRotationSpeed(double distanceToRotate) {
         if(Math.abs(distanceToRotate) < 3) {
             return 0.1;
         }
@@ -145,7 +145,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         return 0.9;
     }
 
-    void moveRobot(double x, double y) {
+    private void moveRobot(double x, double y) {
 
         // Calculate wheel powers.
         double leftFrontPower    =  x +y;
