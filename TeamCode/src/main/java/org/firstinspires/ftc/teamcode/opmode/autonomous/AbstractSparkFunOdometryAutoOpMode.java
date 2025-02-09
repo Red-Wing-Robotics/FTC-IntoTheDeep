@@ -67,7 +67,15 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
                 shouldTurnClockwise ? -rotationPower : rotationPower);
     }
 
+    public void autoDrive(double targetX, double targetY, int maxTime) {
+        autoDrive(targetX, targetY, false, 0, maxTime);
+    }
+
     public void autoDrive(double targetX, double targetY, double targetHeading, int maxTime) {
+        autoDrive(targetX, targetY, true, targetHeading, maxTime);
+    }
+
+    public void autoDrive(double targetX, double targetY, boolean adjustHeading, double targetHeading, int maxTime) {
         double drive, strafe;
         double xError, yError, yawError;
 
@@ -85,7 +93,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
                 ((Math.abs(xError) > 1) || (Math.abs(yError) > 1) || shouldRotate )) {
 
             // Rotate to position
-            if(shouldRotate) {
+            if(shouldRotate && adjustHeading) {
                 telemetry.addData("Phase: ", "ROTATE");
                 rotateRobot(targetHeading, shouldTurnClockwise);
             } else {
