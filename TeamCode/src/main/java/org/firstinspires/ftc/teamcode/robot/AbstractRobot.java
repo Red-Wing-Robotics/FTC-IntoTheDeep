@@ -15,6 +15,14 @@ public abstract class AbstractRobot {
         this.hardwareMap = hardwareMap;
     }
 
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
     public abstract void configureHardware();
 
 }
