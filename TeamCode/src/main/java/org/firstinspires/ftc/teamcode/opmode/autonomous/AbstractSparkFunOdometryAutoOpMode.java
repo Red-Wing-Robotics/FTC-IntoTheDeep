@@ -110,11 +110,13 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             if(shouldRotate && (Math.abs(yawError) <= ROTATE_FUDGE_FACTOR)) {
                 moveRobot(0, 0);
                 shouldRotate = false;
+                sleep(100);
             }
 
             telemetry.update();
         }
         moveRobot(0,0);
+        sleep(100);
     }
 
     double getRotationSpeed(double distanceToRotate) {
@@ -152,6 +154,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
         // Send powers to the wheels.
         robot.setDrivePower(leftFrontPower, leftBackPower, rightFrontPower, rightBackPower);
+        sleep(5);
     }
 
 }
