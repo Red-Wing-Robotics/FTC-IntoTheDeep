@@ -75,7 +75,12 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         autoDrive(targetX, targetY, true, targetHeading, maxTime);
     }
 
-    public void autoDrive(double targetX, double targetY, boolean adjustHeading, double targetHeading, int maxTime) {
+    public void autoDrive(double targetHeading, int maxTime) {
+        SparkFunOTOS.Pose2D currentPos = myPosition();
+        autoDrive(currentPos.x, currentPos.y, true, targetHeading, maxTime);
+    }
+
+    private void autoDrive(double targetX, double targetY, boolean adjustHeading, double targetHeading, int maxTime) {
         double drive, strafe;
         double xError, yError, yawError;
 
