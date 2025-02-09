@@ -119,32 +119,6 @@ public class MecanumDriveViperSlide extends OpMode {
         telemetry.addData("Pos Y", pos.y);
         telemetry.addData("Heading", pos.h);
     }
-    /*
-    private void controlArm() {
-        if (gamepad1.dpad_up && armForward && !gamepad1.dpad_down) {
-            armForward = false;
-            armBackward = true;
-            posIdx = posIdx - 1;
-
-            // added to account for setting armPosIdx to -1
-            if (posIdx < 0) {
-                posIdx = ARM_POSITIONS.length - 1;
-            }
-        } else if (gamepad1.dpad_down && armBackward && !gamepad1.dpad_up) {
-            armForward = true;
-            armBackward = false;
-            posIdx = (posIdx + 1) % ARM_POSITIONS.length;
-        } else if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
-            armBackward = true;
-            armForward = true;
-        }
-        armPos = ARM_POSITIONS[posIdx];
-
-        armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
-        robot.setArmPosition((int) (armPos  + armPositionFudgeFactor));
-        telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
-    }
-    */
 
     private void controlArm() {
         if( gamepad1.dpad_down ){
@@ -162,19 +136,6 @@ public class MecanumDriveViperSlide extends OpMode {
         telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
     }
 
-/*
-    private void controlArm(){
-        if( gamepad1.dpad_up ){
-            armPos++;
-        }
-        else if ( gamepad1.dpad_down && robot.armMotor.getCurrentPosition() > 0 ){
-            armPos--;
-        }
-
-        robot.setArmPosition( (int)(armPos * RobotPosition.ARM_TICKS_PER_DEGREE) );
-        telemetry.addData("Arm Motor Position", robot.armMotor.getCurrentPosition() / RobotPosition.ARM_TICKS_PER_DEGREE);
-    }
-*/
     private void controlViperSlide() {
         boolean canExtend = (robot.vsMotor.getCurrentPosition() > -1235 || robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE);
         boolean canRetract = robot.vsMotor.getCurrentPosition() < 0;
