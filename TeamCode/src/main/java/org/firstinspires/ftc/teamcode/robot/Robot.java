@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.hardware.bosch.BHI260IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -22,6 +25,10 @@ public class Robot extends AbstractSparkFunRobot {
 
     public Servo wrist = null;
     public Servo claw = null;
+
+    // Sensors -------------------------------------------------------
+
+    public IMU imu = null; // BHI260AP
 
     // Local variables -----------------------------------------------
 
@@ -48,6 +55,13 @@ public class Robot extends AbstractSparkFunRobot {
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRightMotor");
         vsMotor = hardwareMap.get(DcMotor.class, "viperSlideMotor");
         armMotor = hardwareMap.get(DcMotor.class, "arm2");
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+        imu.resetYaw();
 
         wrist = hardwareMap.get(Servo.class, "wrist");
         claw = hardwareMap.get(Servo.class, "claw");
