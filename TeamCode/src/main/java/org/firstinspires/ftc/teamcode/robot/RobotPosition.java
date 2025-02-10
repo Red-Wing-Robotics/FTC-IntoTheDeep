@@ -4,7 +4,7 @@ public class RobotPosition {
 
     static public final double CLAW_CLOSED = 0.25d;
     static public final double CLAW_OPEN = 0.4d;
-    static public final double WRIST_IN = 0d;
+    static public final double WRIST_IN = 0.1d;
     static public final double WRIST_SPECIMEN = 0.25d;
     static public final double WRIST_MID = 0.45d;
     static public final double WRIST_DOWN = 0.75d;
