@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.opmode.autonomous.config.HeadingSource;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 
@@ -15,13 +17,12 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
     public double SPEED_GAIN  =  0.03;   // The default value ramps up to 50% power at a 25 inch error. (0.50 / 25.0)
     public double STRAFE_GAIN =  0.15;   // 0.015 Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    public double TURN_GAIN   =  0.03;   // 0.01 Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
     public double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public double MAX_AUTO_STRAFE = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
-    public double MAX_AUTO_TURN  = 0.4;   //  Clip the turn speed to this max value (adjust for your robot)
-    public double ROTATE_FUDGE_FACTOR = 2d; // Fudge factor for rotation - it will check to see if heading is within this amount
 
     private final ElapsedTime runtime = new ElapsedTime();
+
+    private HeadingSource headingSource = HeadingSource.SPARKFUN;
 
     public Robot robot = null;
 
@@ -53,9 +54,18 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
     abstract void configureAutoDrive();
 
+    public void setHeadingSource(HeadingSource source) {
+        headingSource = source;
+    }
+
     public SparkFunOTOS.Pose2D myPosition() {
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
-        return new SparkFunOTOS.Pose2D(pos.x, pos.y, pos.h);
+        if(headingSource == HeadingSource.SPARKFUN) {
+            return new SparkFunOTOS.Pose2D(pos.x, pos.y, pos.h);
+        } else {
+            double heading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+            return new SparkFunOTOS.Pose2D(pos.x, pos.y, heading);
+        }
     }
 
     private void rotateRobot(double targetHeading, boolean shouldTurnClockwise) {
@@ -80,50 +90,63 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         autoDrive(currentPos.x, currentPos.y, true, targetHeading, maxTime);
     }
 
-    private void autoDrive(double targetX, double targetY, boolean adjustHeading, double targetHeading, int maxTime) {
-        double drive, strafe;
-        double xError, yError, yawError;
+    private boolean shouldDriveLoopContinue(int maxTime, boolean shouldDrive, boolean shouldRotate) {
+        return (opModeIsActive() && runtime.milliseconds() < maxTime*1000 && (shouldDrive || shouldRotate));
+    }
 
-        SparkFunOTOS.Pose2D currentPos = myPosition();
-        xError = targetX-currentPos.x;
-        yError = targetY-currentPos.y;
-        yawError = targetHeading-currentPos.h;
+    private void logDriveMetrics(DriveError de) {
+        telemetry.addData("Pos X: ", myPosition().x);
+        telemetry.addData("Pos Y: ", myPosition().y);
+        telemetry.addData("Pox H: ", myPosition().h);
+        telemetry.addData("X Error: ", de.xError);
+        telemetry.addData("Target X: ", de.targetX);
+        telemetry.addData("Y Error: ", de.yError);
+        telemetry.addData("Target Y: ", de.targetY);
+        telemetry.addData("Yaw Error: ", de.yawError);
+        telemetry.addData("Target Heading: ", de.targetHeading);
+        telemetry.addData("Drive Complete: ", de.isDriveWithinRange);
+        telemetry.addData("Rotate Complete: ", de.isHeadingWithinRange);
+    }
+
+    private void autoDrive(double targetX, double targetY, boolean adjustHeading, double targetHeading, int maxTime) {
+        // Get Diff for all values
+        DriveError driveError = new DriveError(myPosition(), targetX, targetY, targetHeading);
 
         runtime.reset();
 
-        boolean shouldRotate = (Math.abs(yawError) > ROTATE_FUDGE_FACTOR);
-        boolean shouldTurnClockwise = MathUtils.shouldTurnClockwiseDegrees(myPosition().h, targetHeading);
+        boolean shouldRotate = adjustHeading && !driveError.isHeadingWithinRange;
+        boolean shouldDrive = !driveError.isDriveWithinRange;
 
-        while(opModeIsActive() &&  (runtime.milliseconds() < maxTime*1000) &&
-                ((Math.abs(xError) > 1) || (Math.abs(yError) > 1) || shouldRotate )) {
+        boolean shouldTurnClockwise = MathUtils.shouldTurnClockwiseDegrees(myPosition().h, targetHeading);
+        while(shouldDriveLoopContinue(maxTime, shouldDrive, shouldRotate)) {
 
             // Rotate to position
-            if(shouldRotate && adjustHeading) {
+            if(shouldRotate) {
                 telemetry.addData("Phase: ", "ROTATE");
                 rotateRobot(targetHeading, shouldTurnClockwise);
             } else {
                 telemetry.addData("Phase: ", "MOVE");
-                double currentYawRadians = currentPos.h * 3.1415 / 180;
-                double rotX = xError * Math.cos(currentYawRadians) - yError * Math.sin(currentYawRadians);
-                double rotY = xError * Math.sin(currentYawRadians) + yError * Math.cos(currentYawRadians);
-
-                drive = Range.clip(rotY * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                strafe = Range.clip(rotX * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
+                double drive  = Range.clip(driveError.yError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                double strafe = Range.clip(driveError.xError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
                 moveRobot(drive, strafe);
             }
 
-            // then recalc error
-            currentPos = myPosition();
-            xError = targetX - currentPos.x;
-            yError = targetY - currentPos.y;
-            yawError = targetHeading - currentPos.h;
+            // then recalculate drive error
+            driveError = new DriveError(myPosition(), targetX, targetY, targetHeading);
+            logDriveMetrics(driveError);
+
+            // We just arrived at the correct location
+            if(shouldDrive && driveError.isDriveWithinRange) {
+                moveRobot(0, 0);
+                shouldDrive = false;
+                sleep(50);
+            }
 
             // Did we just complete rotation? If so, stop motors immediately
-            if(shouldRotate && (Math.abs(yawError) <= ROTATE_FUDGE_FACTOR)) {
+            if(shouldRotate && driveError.isHeadingWithinRange) {
                 moveRobot(0, 0);
                 shouldRotate = false;
-                sleep(100);
+                sleep(50);
             }
 
             telemetry.update();
@@ -167,7 +190,40 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
         // Send powers to the wheels.
         robot.setDrivePower(leftFrontPower, leftBackPower, rightFrontPower, rightBackPower);
-        sleep(5);
     }
 
+}
+
+class DriveError {
+
+    public static double ROTATE_FUDGE_FACTOR = 2d;
+
+    public static double DRIVE_POSITION_FUDGE = 1d;
+
+    public double xError;
+
+    public double yError;
+
+    public double yawError;
+
+    public double targetX;
+
+    public double targetY;
+
+    public double targetHeading;
+
+    boolean isHeadingWithinRange;
+
+    boolean isDriveWithinRange;
+
+    DriveError(SparkFunOTOS.Pose2D currentPos, double targetX, double targetY, double targetHeading) {
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.targetHeading = targetHeading;
+        xError = targetX-currentPos.x;
+        yError = targetY-currentPos.y;
+        yawError = targetHeading-currentPos.h;
+        isHeadingWithinRange = (Math.abs(yawError) <= ROTATE_FUDGE_FACTOR);
+        isDriveWithinRange = (Math.abs(xError) <= DRIVE_POSITION_FUDGE) && (Math.abs(yError) <= DRIVE_POSITION_FUDGE);
+    }
 }
