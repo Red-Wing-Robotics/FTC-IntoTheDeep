@@ -112,12 +112,12 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
     private void autoDrive(double targetX, double targetY, boolean adjustHeading, double targetHeading, RotationDirection direction, int maxTime) {
         // Get Diff for all values
-        DriveState driveState = new DriveState(myPosition(), targetX, targetY, targetHeading);
+        DriveState ds = new DriveState(myPosition(), targetX, targetY, targetHeading);
 
         runtime.reset();
 
-        boolean shouldRotate = adjustHeading && !driveState.isHeadingWithinRange;
-        boolean shouldDrive = !driveState.isDriveWithinRange;
+        boolean shouldRotate = adjustHeading && !ds.isHeadingWithinRange;
+        boolean shouldDrive = !ds.isDriveWithinRange;
 
         RotationDirection rotationDirection = (direction == RotationDirection.CLOSEST) ? MathUtils.getClosestRotationDirectionDegrees(myPosition().h, targetHeading) : direction;
         while(shouldDriveLoopContinue(maxTime, shouldDrive, shouldRotate)) {
@@ -131,25 +131,27 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
             } else {
                 telemetry.addData("Phase: ", "MOVE");
-                double drive  = Range.clip(driveState.yError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                double strafe = Range.clip(driveState.xError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
+                double drive  = Range.clip(ds.yError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                double strafe = Range.clip(ds.xError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+//                double currentYawRadians = Math.toRadians(myPosition().h);
+//                double rotX = ds.xError * Math.cos(currentYawRadians) - ds.yError * Math.sin(currentYawRadians);
+//                double rotY = ds.xError * Math.sin(currentYawRadians) + ds.yError * Math.cos(currentYawRadians);
                 moveRobot(drive, strafe);
             }
 
             // then recalculate drive error
-            driveState = new DriveState(myPosition(), targetX, targetY, targetHeading);
-            logDriveMetrics(driveState);
+            ds = new DriveState(myPosition(), targetX, targetY, targetHeading);
+            logDriveMetrics(ds);
 
             // We just arrived at the correct location
-            if(shouldDrive && driveState.isDriveWithinRange) {
+            if(shouldDrive && ds.isDriveWithinRange) {
                 moveRobot(0, 0);
                 shouldDrive = false;
                 sleep(50);
             }
 
             // Did we just complete rotation? If so, stop motors immediately
-            if(shouldRotate && driveState.isHeadingWithinRange) {
+            if(shouldRotate && ds.isHeadingWithinRange) {
                 moveRobot(0, 0);
                 shouldRotate = false;
                 sleep(50);
