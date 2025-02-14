@@ -2,32 +2,48 @@ package org.firstinspires.ftc.teamcode.opmode.autonomous.config;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class DriveState {
+
+    public final double x;
+
+    public final double y;
+
+    public final double h;
 
     public final double xError;
 
     public final double yError;
 
-    public final double yawError;
-
     public final double targetX;
 
     public final double targetY;
 
-    public final double targetHeading;
-
-    public final boolean isHeadingWithinRange;
-
     public final boolean isDriveWithinRange;
 
-    public DriveState(SparkFunOTOS.Pose2D currentPos, double targetX, double targetY, double targetHeading) {
+    public DriveState(SparkFunOTOS.Pose2D currentPos, double targetX, double targetY) {
+        x = currentPos.x;
+        y = currentPos.y;
+        h = currentPos.h;
         this.targetX = targetX;
         this.targetY = targetY;
-        this.targetHeading = targetHeading;
         xError = targetX-currentPos.x;
         yError = targetY-currentPos.y;
-        yawError = targetHeading-currentPos.h;
-        isHeadingWithinRange = (Math.abs(yawError) <= DriveConstants.ROTATE_FUDGE_FACTOR);
         isDriveWithinRange = (Math.abs(xError) <= DriveConstants.DRIVE_POSITION_FUDGE) && (Math.abs(yError) <= DriveConstants.DRIVE_POSITION_FUDGE);
     }
+
+    public void log(Telemetry telemetry) {
+        telemetry.addData("Action: ", "DRIVE");
+        telemetry.addData("Pos X: ", this.x);
+        telemetry.addData("Pos Y: ", this.y);
+        telemetry.addData("Pox H: ", this.h);
+        telemetry.addData("X Error: ", this.xError);
+        telemetry.addData("Target X: ", this.targetX);
+        telemetry.addData("Y Error: ", this.yError);
+        telemetry.addData("Target Y: ", this.targetY);
+        telemetry.addData("Drive Complete: ", this.isDriveWithinRange);
+        telemetry.update();
+    }
+    
 }

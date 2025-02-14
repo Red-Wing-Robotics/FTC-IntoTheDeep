@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.DriveState;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.HeadingSource;
+import org.firstinspires.ftc.teamcode.opmode.autonomous.config.RotateState;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.RotationDirection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
@@ -22,9 +23,9 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     public double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public double MAX_AUTO_STRAFE = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
 
-    public double ROTATE_GAIN = 0.03; //
+    public double ROTATE_GAIN = 0.01; //
 
-    public double MAX_AUTO_ROTATE = 0.8d;
+    public double MAX_AUTO_ROTATE = 0.6d;
 
     private final ElapsedTime runtime = new ElapsedTime();
 
@@ -39,7 +40,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         robot = new Robot(hardwareMap, telemetry);
         robot.configureHardware();
 
-        sleep(1000);
+        sleep(500);
 
         while(!isStarted()) {
             // Wait for the game to start (driver presses PLAY)
@@ -64,6 +65,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         headingSource = source;
     }
 
+    // This is an expensive call - we should only do this once per loop
     public SparkFunOTOS.Pose2D myPosition() {
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
         if(headingSource == HeadingSource.SPARKFUN) {
@@ -75,95 +77,94 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     public void autoDrive(double targetX, double targetY, int maxTime) {
-        autoDrive(targetX, targetY, false, 0, RotationDirection.CLOSEST, maxTime);
+        driveRobot(targetX, targetY, maxTime);
     }
 
+    // Note that max time for this call will be used for both rotate and drive
+    // It doesn't keep a max time for both actions together, but rather for each
+    // of them individually.
     public void autoDrive(double targetX, double targetY, double targetHeading, int maxTime) {
-        autoDrive(targetX, targetY, true, targetHeading, RotationDirection.CLOSEST, maxTime);
+        rotateRobot(targetHeading, RotationDirection.CLOSEST, maxTime);
+        driveRobot(targetX, targetY, maxTime);
     }
 
     public void autoDrive(double targetHeading, int maxTime) {
-        SparkFunOTOS.Pose2D currentPos = myPosition();
-        autoDrive(currentPos.x, currentPos.y, true, targetHeading, RotationDirection.CLOSEST, maxTime);
+        rotateRobot(targetHeading, RotationDirection.CLOSEST, maxTime);
     }
 
     public void autoDrive(double targetHeading, RotationDirection direction, int maxTime) {
-        SparkFunOTOS.Pose2D currentPos = myPosition();
-        autoDrive(currentPos.x, currentPos.y, true, targetHeading, direction, maxTime);
+        rotateRobot(targetHeading, direction, maxTime);
     }
 
-    private boolean shouldDriveLoopContinue(int maxTime, boolean shouldDrive, boolean shouldRotate) {
-        return (opModeIsActive() && runtime.milliseconds() < maxTime*1000 && (shouldDrive || shouldRotate));
+    private boolean shouldLoopContinue(int maxTime, boolean shouldContinue) {
+        return (opModeIsActive() && runtime.milliseconds() < maxTime*1000 && shouldContinue);
     }
 
-    private void logDriveMetrics(DriveState ds) {
-        telemetry.addData("Pos X: ", myPosition().x);
-        telemetry.addData("Pos Y: ", myPosition().y);
-        telemetry.addData("Pox H: ", myPosition().h);
-        telemetry.addData("X Error: ", ds.xError);
-        telemetry.addData("Target X: ", ds.targetX);
-        telemetry.addData("Y Error: ", ds.yError);
-        telemetry.addData("Target Y: ", ds.targetY);
-        telemetry.addData("Yaw Error: ", ds.yawError);
-        telemetry.addData("Target Heading: ", ds.targetHeading);
-        telemetry.addData("Drive Complete: ", ds.isDriveWithinRange);
-        telemetry.addData("Rotate Complete: ", ds.isHeadingWithinRange);
-    }
-
-    private void autoDrive(double targetX, double targetY, boolean adjustHeading, double targetHeading, RotationDirection direction, int maxTime) {
+    private void driveRobot(double targetX, double targetY, int maxTime) {
         // Get Diff for all values
-        DriveState ds = new DriveState(myPosition(), targetX, targetY, targetHeading);
+        DriveState ds = new DriveState(myPosition(), targetX, targetY);
 
         runtime.reset();
 
-        boolean shouldRotate = adjustHeading && !ds.isHeadingWithinRange;
-        boolean shouldDrive = !ds.isDriveWithinRange;
+        boolean shouldContinue = !ds.isDriveWithinRange;
 
-        RotationDirection rotationDirection = (direction == RotationDirection.CLOSEST) ? MathUtils.getClosestRotationDirectionDegrees(myPosition().h, targetHeading) : direction;
-        while(shouldDriveLoopContinue(maxTime, shouldDrive, shouldRotate)) {
+        while(shouldLoopContinue(maxTime, shouldContinue)) {
 
-            // Rotate to position
-            if(shouldRotate) {
-                telemetry.addData("Phase: ", "ROTATE");
-                double distanceToRotate = Math.abs(targetHeading - myPosition().h);
-                double power  = Range.clip(distanceToRotate * ROTATE_GAIN, -MAX_AUTO_ROTATE, MAX_AUTO_ROTATE);
-                rotateRobot(power, rotationDirection);
+            double currentYawRadians = Math.toRadians(ds.h);
+            double rotY = ds.xError * Math.cos(currentYawRadians) - ds.yError * Math.sin(currentYawRadians);
+            double rotX = ds.xError * Math.sin(currentYawRadians) + ds.yError * Math.cos(currentYawRadians);
+            setDrivePower(rotX, rotY);
 
-            } else {
-                telemetry.addData("Phase: ", "MOVE");
-                double drive  = Range.clip(ds.yError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                double strafe = Range.clip(ds.xError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-//                double currentYawRadians = Math.toRadians(myPosition().h);
-//                double rotX = ds.xError * Math.cos(currentYawRadians) - ds.yError * Math.sin(currentYawRadians);
-//                double rotY = ds.xError * Math.sin(currentYawRadians) + ds.yError * Math.cos(currentYawRadians);
-                moveRobot(drive, strafe);
+            // We just arrived at the correct location
+            if(ds.isDriveWithinRange) {
+                setDrivePower(0, 0);
+                shouldContinue = false;
+                sleep(50);
             }
 
             // then recalculate drive error
-            ds = new DriveState(myPosition(), targetX, targetY, targetHeading);
-            logDriveMetrics(ds);
-
-            // We just arrived at the correct location
-            if(shouldDrive && ds.isDriveWithinRange) {
-                moveRobot(0, 0);
-                shouldDrive = false;
-                sleep(50);
-            }
-
-            // Did we just complete rotation? If so, stop motors immediately
-            if(shouldRotate && ds.isHeadingWithinRange) {
-                moveRobot(0, 0);
-                shouldRotate = false;
-                sleep(50);
-            }
-
-            telemetry.update();
+            ds = new DriveState(myPosition(), targetX, targetY);
+            ds.log(telemetry);
         }
-        moveRobot(0,0);
-        sleep(100);
+
+        setDrivePower(0,0);
+        sleep(50);
     }
 
-    private void rotateRobot(double power, RotationDirection direction) {
+    private void rotateRobot(double targetHeading, RotationDirection direction, int maxTime) {
+        // Get Diff for all values
+        RotateState rs = new RotateState(myPosition(), targetHeading);
+
+        runtime.reset();
+
+        boolean shouldContinue = !rs.isHeadingWithinRange;
+
+        if(direction == RotationDirection.CLOSEST) {
+            direction = MathUtils.getClosestRotationDirectionDegrees(rs.h, targetHeading);
+        }
+
+        while(shouldLoopContinue(maxTime, shouldContinue)) {
+            double distanceToRotate = Math.abs(targetHeading - rs.h);
+            double power  = Range.clip(distanceToRotate * ROTATE_GAIN, -MAX_AUTO_ROTATE, MAX_AUTO_ROTATE);
+            setRotatePower(power, direction);
+
+            // Did we just complete rotation? If so, stop motors immediately
+            if(rs.isHeadingWithinRange) {
+                setRotatePower(0, RotationDirection.CLOCKWISE);
+                shouldContinue = false;
+                sleep(50);
+            }
+
+            // then recalculate drive error
+            rs = new RotateState(myPosition(), targetHeading);
+            rs.log(telemetry);
+        }
+
+        setRotatePower(0, RotationDirection.CLOCKWISE);
+        sleep(50);
+    }
+
+    private void setRotatePower(double power, RotationDirection direction) {
         boolean isClockwise = (direction == RotationDirection.CLOCKWISE);
         robot.setDrivePower(isClockwise ? power : -power,
                 isClockwise ? power : -power,
@@ -171,7 +172,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
                 isClockwise ? -power : power);
     }
 
-    private void moveRobot(double x, double y) {
+    private void setDrivePower(double x, double y) {
 
         // Calculate wheel powers.
         double leftFrontPower    =  x +y;
