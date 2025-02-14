@@ -66,7 +66,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     // This is an expensive call - we should only do this once per loop
-    public SparkFunOTOS.Pose2D myPosition() {
+    private SparkFunOTOS.Pose2D myPosition() {
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
         if(headingSource == HeadingSource.SPARKFUN) {
             return new SparkFunOTOS.Pose2D(pos.x, pos.y, pos.h);
@@ -119,7 +119,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             ds = new DriveState(myPosition(), targetX, targetY);
             ds.log(telemetry);
 
-            // Did we just complete drive? If so, stop motors immediately and break from loop
+            // Did we just complete drive? If so, break from loop
             if(ds.isDriveWithinRange) {
                 break;
             }
@@ -130,7 +130,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
     private void rotateRobot(double targetHeading, RotationDirection direction, long maxTimeMilliseconds) {
         // Get Diff for all values
-        RotateState rs = new RotateState(myPosition(), targetHeading);
+        RotateState rs = new RotateState(myPosition(), targetHeading, direction);
 
         runtime.reset();
 
@@ -142,15 +142,14 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
         while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldRotate) {
             // Apply power to motors
-            double distanceToRotate = Math.abs(targetHeading - rs.h);
-            double power  = Range.clip(distanceToRotate * ROTATE_GAIN, -MAX_AUTO_ROTATE, MAX_AUTO_ROTATE);
+            double power  = Range.clip(rs.yawError * ROTATE_GAIN, -MAX_AUTO_ROTATE, MAX_AUTO_ROTATE);
             setRotatePower(power, direction);
 
             // then recalculate drive error
-            rs = new RotateState(myPosition(), targetHeading);
+            rs = new RotateState(myPosition(), targetHeading, direction);
             rs.log(telemetry);
 
-            // Did we just complete rotation? If so, stop motors immediately and break from loop
+            // Did we just complete rotation? If so, break from loop
             if(rs.isHeadingWithinRange) {
                 break;
             }
@@ -172,7 +171,6 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     private void setDrivePower(double x, double y) {
-
         // Calculate wheel powers.
         double leftFrontPower    =  x +y;
         double rightFrontPower   =  x -y;
