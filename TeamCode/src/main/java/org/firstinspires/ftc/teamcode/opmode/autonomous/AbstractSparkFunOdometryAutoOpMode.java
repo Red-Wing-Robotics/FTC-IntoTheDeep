@@ -40,7 +40,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         robot = new Robot(hardwareMap, telemetry);
         robot.configureHardware();
 
-        sleep(500);
+        sleep(350);
 
         while(!isStarted()) {
             // Wait for the game to start (driver presses PLAY)
@@ -76,28 +76,28 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         }
     }
 
-    public void autoDrive(double targetX, double targetY, int maxTime) {
-        driveRobot(targetX, targetY, maxTime * 1000L);
+    public void autoDrive(double targetX, double targetY, int maxTimeSeconds) {
+        driveRobot(targetX, targetY, maxTimeSeconds * 1000L);
     }
 
     // This does the extra work of splitting the max time between two separate calls,
     // one to driveRobot and one to rotateRobot
-    public void autoDrive(double targetX, double targetY, double targetHeading, int maxTime) {
+    public void autoDrive(double targetX, double targetY, double targetHeading, int maxTimeSeconds) {
         long startingMillis = System.currentTimeMillis();
-        rotateRobot(targetHeading, RotationDirection.CLOSEST, maxTime * 1000L);
-        long remainingMillis = (maxTime * 1000L) - (System.currentTimeMillis() - startingMillis);
+        rotateRobot(targetHeading, RotationDirection.CLOSEST, maxTimeSeconds * 1000L);
+        long remainingMillis = (maxTimeSeconds * 1000L) - (System.currentTimeMillis() - startingMillis);
         if(remainingMillis < 0) {
             return;
         }
         driveRobot(targetX, targetY, remainingMillis);
     }
 
-    public void autoDrive(double targetHeading, int maxTime) {
-        rotateRobot(targetHeading, RotationDirection.CLOSEST, maxTime * 1000L);
+    public void autoDrive(double targetHeading, int maxTimeSeconds) {
+        rotateRobot(targetHeading, RotationDirection.CLOSEST, maxTimeSeconds * 1000L);
     }
 
-    public void autoDrive(double targetHeading, RotationDirection direction, int maxTime) {
-        rotateRobot(targetHeading, direction, maxTime * 1000L);
+    public void autoDrive(double targetHeading, RotationDirection direction, int maxTimeSeconds) {
+        rotateRobot(targetHeading, direction, maxTimeSeconds * 1000L);
     }
 
     private void driveRobot(double targetX, double targetY, long maxTimeMilliseconds) {
