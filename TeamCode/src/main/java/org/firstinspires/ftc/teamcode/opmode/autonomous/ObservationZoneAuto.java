@@ -10,12 +10,10 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
 
     @Override
     void configureAutoDrive() {
-        SPEED_GAIN  =  0.05;
-        STRAFE_GAIN =  0.1;
-        TURN_GAIN = 0.1;
+        SPEED_GAIN  =  0.09;
+        STRAFE_GAIN =  0.09;
         MAX_AUTO_SPEED = 1d;
         MAX_AUTO_STRAFE = 1d;
-        MAX_AUTO_TURN = 1d;
     }
 
     @Override
@@ -30,14 +28,14 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         robot.setArmPosition( RobotPosition.ARM_ORIGIN );
         robot.setWristPosition( RobotPosition.WRIST_IN );
         autoDrive(24, 18, 180, 5);
-        autoDrive(24, 51, 2);
-        autoDrive(33, 51, 1);
-        autoDrive(33, 8, 2);
-        autoDrive(33, 52, 2);
-        autoDrive(46, 52, 1);
-        autoDrive(46, 8, 2);
-        autoDrive(46, 18, 2);
-        autoDrive(38, 18, 2);
+        autoDrive(24, 51, 180, 2);
+        autoDrive(33, 51, 180, 1);
+        autoDrive(33, 8, 180, 2);
+        autoDrive(33, 52, 180, 2);
+        autoDrive(46, 52, 180, 1);
+        autoDrive(46, 8, 180,2);
+        autoDrive(46, 18, 180,2);
+        autoDrive(38, 18, 180, 2);
         robot.setArmPosition(RobotPosition.ARM_SUBMERSIBLE);
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
         robot.setWristPosition( RobotPosition.WRIST_MID );
@@ -67,10 +65,6 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         robot.hangSpecimen();
         autoDrive(-7,10,0,5);
         autoDrive(-7,31,2);
-
-
-
-
     }
 
 }
