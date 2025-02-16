@@ -81,10 +81,10 @@ public class Robot extends AbstractSparkFunRobot {
         rightFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         vsMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        vsMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //vsMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Will move the "attachments" to their starting positions
         setRobotAttachmentPositions();

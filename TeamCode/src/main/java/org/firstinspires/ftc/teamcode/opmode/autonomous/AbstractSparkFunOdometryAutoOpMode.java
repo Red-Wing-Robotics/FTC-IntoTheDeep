@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -34,6 +35,8 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
         robot = new Robot(hardwareMap, telemetry);
         robot.configureHardware();
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.vsMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         sleep(350);
 
@@ -127,7 +130,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             }
         }
         stopDriveMotors();
-        sleep(50);
+        //sleep(50);
     }
 
     private void rotateRobot(double targetHeading, RotationDirection direction, long maxTimeMilliseconds) {
@@ -166,7 +169,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             }
         }
         stopDriveMotors();
-        sleep(50);
+        //sleep(50);
     }
 
     private void stopDriveMotors() {

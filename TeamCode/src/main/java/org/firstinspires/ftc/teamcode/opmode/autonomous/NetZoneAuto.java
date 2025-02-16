@@ -10,8 +10,8 @@ public class NetZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
 
     @Override
     void configureAutoDrive() {
-        SPEED_GAIN  =  0.1;
-        STRAFE_GAIN =  0.2;
+        SPEED_GAIN  =  0.09;
+        STRAFE_GAIN =  0.09;
         MAX_AUTO_SPEED = 1d;
         MAX_AUTO_STRAFE = 1d;
     }
