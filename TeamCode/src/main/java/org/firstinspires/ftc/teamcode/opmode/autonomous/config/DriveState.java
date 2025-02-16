@@ -6,6 +6,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class DriveState {
 
+    public static final double DRIVE_POSITION_FUDGE = 1d;
+
     public final double x;
 
     public final double y;
@@ -30,7 +32,7 @@ public class DriveState {
         this.targetY = targetY;
         xError = targetX-currentPos.x;
         yError = targetY-currentPos.y;
-        isDriveWithinRange = (Math.abs(xError) <= DriveConstants.DRIVE_POSITION_FUDGE) && (Math.abs(yError) <= DriveConstants.DRIVE_POSITION_FUDGE);
+        isDriveWithinRange = (Math.abs(xError) <= DRIVE_POSITION_FUDGE) && (Math.abs(yError) <= DRIVE_POSITION_FUDGE);
     }
 
     public void log(Telemetry telemetry) {

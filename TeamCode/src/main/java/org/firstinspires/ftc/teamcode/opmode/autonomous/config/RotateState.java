@@ -6,6 +6,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RotateState {
 
+    public static final double ROTATE_FUDGE_FACTOR = 2d;
+
     public final double x;
 
     public final double y;
@@ -33,7 +35,7 @@ public class RotateState {
         this.direction = direction;
         this.targetHeading = targetHeading;
         yawError = calculateRotationDelta(currentPos.h, targetHeading);
-        isHeadingWithinRange = (Math.abs(yawError) <= DriveConstants.ROTATE_FUDGE_FACTOR);
+        isHeadingWithinRange = (Math.abs(yawError) <= ROTATE_FUDGE_FACTOR);
     }
 
     public void log(Telemetry telemetry) {
