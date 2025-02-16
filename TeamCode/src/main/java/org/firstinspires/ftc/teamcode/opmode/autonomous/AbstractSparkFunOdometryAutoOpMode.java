@@ -22,13 +22,8 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     public double STRAFE_GAIN =  0.15;   // 0.015 Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
     public double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public double MAX_AUTO_STRAFE = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
-
-    public double ROTATE_GAIN = 0.01; //
-
-    public double MAX_AUTO_ROTATE = 0.6d;
-
+    public double MAX_AUTO_ROTATE = 1.0d;
     private final ElapsedTime runtime = new ElapsedTime();
-
     private HeadingSource headingSource = HeadingSource.SPARKFUN;
 
     public Robot robot = null;
@@ -104,16 +99,23 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         // Get Diff for all values
         DriveState ds = new DriveState(myPosition(), targetX, targetY);
 
+        double drive, strafe, currentYawRadians, rotX, rotY;
+
         runtime.reset();
 
         boolean shouldDrive = !ds.isDriveWithinRange;
 
         while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldDrive) {
-            // Apply power to motors
-            double currentYawRadians = Math.toRadians(ds.h);
-            double rotY = ds.xError * Math.cos(currentYawRadians) - ds.yError * Math.sin(currentYawRadians);
-            double rotX = ds.xError * Math.sin(currentYawRadians) + ds.yError * Math.cos(currentYawRadians);
-            setDrivePower(rotX, rotY);
+            currentYawRadians = Math.toRadians(ds.h);
+            rotY = ds.xError * Math.cos(currentYawRadians) - ds.yError * Math.sin(currentYawRadians);
+            rotX = ds.xError * Math.sin(currentYawRadians) + ds.yError * Math.cos(currentYawRadians);
+
+            // Drive is Y axis
+            drive  = Range.clip(rotX * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+            // Strafe is X axis
+            strafe = Range.clip(rotY * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+            setDrivePower(drive, -strafe);
 
             // then recalculate drive error
             ds = new DriveState(myPosition(), targetX, targetY);
@@ -135,14 +137,23 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         runtime.reset();
 
         boolean shouldRotate = !rs.isHeadingWithinRange;
+        double power;
 
         if(direction == RotationDirection.CLOSEST) {
             direction = MathUtils.getClosestRotationDirectionDegrees(rs.h, targetHeading);
         }
 
         while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldRotate) {
-            // Apply power to motors
-            double power  = Range.clip(rs.yawError * ROTATE_GAIN, -MAX_AUTO_ROTATE, MAX_AUTO_ROTATE);
+
+            if(Math.abs(rs.yawError) < 10) {
+                power = 0.2;
+            } else if (Math.abs(rs.yawError) <25) {
+                power = 0.5;
+            } else {
+                power = 1;
+            }
+
+            power = Math.min(power, MAX_AUTO_ROTATE);
             setRotatePower(power, direction);
 
             // then recalculate drive error
@@ -170,12 +181,13 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
                 isClockwise ? -power : power);
     }
 
+
     private void setDrivePower(double x, double y) {
         // Calculate wheel powers.
-        double leftFrontPower    =  x +y;
-        double rightFrontPower   =  x -y;
-        double leftBackPower     =  x -y;
-        double rightBackPower    =  x +y;
+        double leftFrontPower = x - y;
+        double rightFrontPower = x + y;
+        double leftBackPower = x + y;
+        double rightBackPower = x - y;
 
         // Normalize wheel powers to be less than 1.0
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
