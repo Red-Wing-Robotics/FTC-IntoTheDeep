@@ -218,6 +218,8 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
     private void stopDriveMotors() {
         robot.setDrivePower(0,0,0,0);
+        // Force a stop to enable BRAKE
+        sleep(10);
     }
 
     private void setRotatePower(double power, RotationDirection direction) {
