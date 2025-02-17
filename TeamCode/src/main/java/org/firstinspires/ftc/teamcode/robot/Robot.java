@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.hardware.bosch.BHI260IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -30,6 +30,8 @@ public class Robot extends AbstractSparkFunRobot {
 
     public IMU imu = null; // BHI260AP
 
+    public Rev2mDistanceSensor distanceSensor; // 'Distance Sensor'
+
     // Local variables -----------------------------------------------
 
     public int armPosition = RobotPosition.ARM_ORIGIN;
@@ -38,6 +40,7 @@ public class Robot extends AbstractSparkFunRobot {
     private double vsPower = 1.0d;
     public double clawPosition = RobotPosition.CLAW_CLOSED;
     public double wristPosition = RobotPosition.WRIST_IN;
+
 
     private boolean isDriveEnabled = true;
 
@@ -62,6 +65,8 @@ public class Robot extends AbstractSparkFunRobot {
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
+
+        distanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "DistanceSensor");
 
         wrist = hardwareMap.get(Servo.class, "wrist");
         claw = hardwareMap.get(Servo.class, "claw");

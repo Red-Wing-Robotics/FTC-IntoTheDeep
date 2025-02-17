@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.DriveState;
+import org.firstinspires.ftc.teamcode.opmode.autonomous.config.DriveToDistanceState;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.HeadingSource;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.RotateState;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.RotationDirection;
@@ -98,6 +100,16 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         rotateRobot(targetHeading, direction, maxTimeSeconds * 1000L);
     }
 
+    public void autoDriveDistance(double targetHeading, double distanceMillimeters, int maxTimeSeconds) {
+        long startingMillis = System.currentTimeMillis();
+        rotateRobot(targetHeading, RotationDirection.CLOSEST, maxTimeSeconds * 1000L);
+        long remainingMillis = (maxTimeSeconds * 1000L) - (System.currentTimeMillis() - startingMillis);
+        if(remainingMillis < 0) {
+            return;
+        }
+        driveToDistance(distanceMillimeters, remainingMillis);
+    }
+
     private void driveRobot(double targetX, double targetY, long maxTimeMilliseconds) {
         // Get Diff for all values
         DriveState ds = new DriveState(myPosition(), targetX, targetY);
@@ -130,7 +142,40 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             }
         }
         stopDriveMotors();
-        //sleep(50);
+    }
+
+    private void driveToDistance(double distanceToObject, long maxTimeMilliseconds) {
+        // Get Diff for all values
+        DriveToDistanceState dds = new DriveToDistanceState(robot.distanceSensor.getDistance(DistanceUnit.MM), distanceToObject);
+
+        runtime.reset();
+
+        boolean shouldDrive = !dds.isDistanceWithinRange;
+        double power;
+
+        while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldDrive) {
+
+            if(Math.abs(dds.distanceError) < 100) {
+                power = 0.1;
+            } else if (Math.abs(dds.distanceError) < 250) {
+                power = 0.25;
+            } else {
+                power = 1;
+            }
+
+            // Move forward
+            setDrivePower((dds.distanceError > 0) ? power : -power, 0);
+
+            // then recalculate drive error
+            dds = new DriveToDistanceState(robot.distanceSensor.getDistance(DistanceUnit.MM), distanceToObject);
+            dds.log(telemetry);
+
+            // Did we just complete rotation? If so, break from loop
+            if(dds.isDistanceWithinRange) {
+                break;
+            }
+        }
+        stopDriveMotors();
     }
 
     private void rotateRobot(double targetHeading, RotationDirection direction, long maxTimeMilliseconds) {
@@ -169,11 +214,12 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             }
         }
         stopDriveMotors();
-        //sleep(50);
     }
 
     private void stopDriveMotors() {
         robot.setDrivePower(0,0,0,0);
+        // Force a stop to enable BRAKE
+        sleep(10);
     }
 
     private void setRotatePower(double power, RotationDirection direction) {
