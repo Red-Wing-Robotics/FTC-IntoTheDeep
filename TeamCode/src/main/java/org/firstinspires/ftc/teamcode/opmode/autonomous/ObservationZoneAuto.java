@@ -36,7 +36,7 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         //autoDrive(46, 52, 180, 1);
         //autoDrive(46, 8, 180,2);
         //autoDrive(46, 18, 180,2);
-        autoDrive(38, 18, 180, 2);
+        autoDrive(38, 28, 180, 2);
         robot.setArmPosition(RobotPosition.ARM_SPECIMEN);
         robot.setWristPosition( RobotPosition.WRIST_MID );
         autoDrive(38, 10, 180,2);
