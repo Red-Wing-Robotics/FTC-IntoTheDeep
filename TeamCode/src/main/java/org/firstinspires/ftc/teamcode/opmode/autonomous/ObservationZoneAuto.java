@@ -37,8 +37,9 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         //autoDrive(46, 18, 180,2);
         autoDrive(38, 28, 180, 2);
         robot.setArmPosition(RobotPosition.ARM_SPECIMEN);
-        robot.setWristPosition( RobotPosition.WRIST_MID );
         autoDrive(38, 10, 180,2);
+        autoDriveDistance( 180, 350, 2);
+        robot.setWristPosition( RobotPosition.WRIST_MID );
         sleep(750);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(200);
@@ -57,6 +58,7 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         //robot.setClawPosition( RobotPosition.CLAW_OPEN );
         //robot.setWristPosition( RobotPosition.WRIST_MID );
         autoDrive(38, 10, 180, 2);
+        autoDriveDistance( 180, 350, 2);
         sleep(750);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(200);
@@ -64,6 +66,10 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         robot.hangSpecimen();
         autoDrive(-7,10,0,5);
         autoDrive(-7,31,2);
+        robot.setClawPosition( RobotPosition.CLAW_OPEN );
+        robot.setViperSlidePosition( 0 );
+        autoDrive(-7,10,0,5);
+        autoDrive(38, 5, 0, 2);
     }
 
 }
