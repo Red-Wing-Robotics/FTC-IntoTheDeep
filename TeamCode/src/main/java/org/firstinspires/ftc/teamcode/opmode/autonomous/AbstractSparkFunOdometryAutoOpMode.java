@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.opmode.autonomous.config.RotateState;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.RotationDirection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
+import org.firstinspires.ftc.teamcode.util.MovingAverageFilter;
 
 /**
  *
@@ -145,8 +146,12 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     private void driveToDistance(double distanceToObject, long maxTimeMilliseconds) {
+        // Create moving average (low pass) filter
+        MovingAverageFilter distanceFilter = new MovingAverageFilter(5);
+        distanceFilter.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
+
         // Get Diff for all values
-        DriveToDistanceState dds = new DriveToDistanceState(robot.distanceSensor.getDistance(DistanceUnit.MM), distanceToObject);
+        DriveToDistanceState dds = new DriveToDistanceState(distanceFilter.getMovingAverage(), distanceToObject);
 
         runtime.reset();
 
@@ -167,7 +172,8 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             setDrivePower((dds.distanceError > 0) ? power : -power, 0);
 
             // then recalculate drive error
-            dds = new DriveToDistanceState(robot.distanceSensor.getDistance(DistanceUnit.MM), distanceToObject);
+            distanceFilter.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
+            dds = new DriveToDistanceState(distanceFilter.getMovingAverage(), distanceToObject);
             dds.log(telemetry);
 
             // Did we just complete rotation? If so, break from loop
