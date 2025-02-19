@@ -24,7 +24,7 @@ public class NetZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         autoDrive(-18,7,135,5);
         autoDrive(-19,6,135,1);
         robot.scoreInHighBasket();
-        autoDrive(-11,18,90,2);
+        autoDrive(-11,18,0,2);
         sleep(200);
         autoDrive(-11,23,0,2);
         robot.setArmPosition(RobotPosition.ARM_ORIGIN);
@@ -43,7 +43,7 @@ public class NetZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         autoDrive(-19,6,135,1);
         robot.scoreInHighBasket();
 
-        autoDrive(-11,18,90,2);
+        autoDrive(-11,18,0,2);
         sleep(200);
         autoDrive(-22,23,0,2);
         robot.setArmPosition(RobotPosition.ARM_ORIGIN);
