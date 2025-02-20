@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.RobotPosition;
+import org.firstinspires.ftc.teamcode.util.MovingAverageFilter;
 
 @SuppressWarnings("unused")
 @TeleOp(name = "Mecanum Viper Slide")
@@ -49,6 +50,8 @@ public class MecanumDriveViperSlide extends OpMode {
 
     double armPositionFudgeFactor = 0.0d;
 
+    MovingAverageFilter df;
+
     Robot robot;
 
     //---------------------------------------------
@@ -59,6 +62,7 @@ public class MecanumDriveViperSlide extends OpMode {
     public void init() {
         robot = new Robot(hardwareMap, telemetry);
         robot.configureHardware();
+        df = new MovingAverageFilter(5);
     }
 
     @Override
@@ -110,16 +114,16 @@ public class MecanumDriveViperSlide extends OpMode {
         double backLeftPower = (y - x + rx) / denominator;
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
-
         robot.setDrivePower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
     }
 
     private void logPosition() {
+        df.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
         telemetry.addData("Pox X", pos.x);
         telemetry.addData("Pos Y", pos.y);
         telemetry.addData("Heading", pos.h);
-        telemetry.addData("Distance: ", robot.distanceSensor.getDistance(DistanceUnit.MM));
+        telemetry.addData("Distance: ", df.getMovingAverage());
     }
 
     private void controlArm() {
