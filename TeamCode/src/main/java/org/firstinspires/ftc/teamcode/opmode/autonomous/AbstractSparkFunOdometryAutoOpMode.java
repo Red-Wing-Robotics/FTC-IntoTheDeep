@@ -108,7 +108,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         if(remainingMillis < 0) {
             return;
         }
-        driveToDistance(distanceMillimeters, remainingMillis);
+        driveToDistance(distanceMillimeters, 3, remainingMillis);
     }
 
     private void driveRobot(double targetX, double targetY, long maxTimeMilliseconds) {
@@ -145,13 +145,15 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         stopDriveMotors();
     }
 
-    private void driveToDistance(double distanceToObject, long maxTimeMilliseconds) {
+    private void driveToDistance(double distanceToObject, int requiredSuccessiveReadings, long maxTimeMilliseconds) {
         // Create moving average (low pass) filter
         MovingAverageFilter distanceFilter = new MovingAverageFilter(5);
         distanceFilter.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
 
         // Get Diff for all values
         DriveToDistanceState dds = new DriveToDistanceState(distanceFilter.getMovingAverage(), distanceToObject);
+
+        int successivePositiveReadings = 0;
 
         runtime.reset();
 
@@ -160,24 +162,27 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
         while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldDrive) {
 
-            if(Math.abs(dds.distanceError) < 100) {
-                power = 0.1;
-            } else if (Math.abs(dds.distanceError) < 250) {
-                power = 0.25;
-            } else {
-                power = 1;
+            if(!dds.isDistanceWithinRange) {
+                if (Math.abs(dds.distanceError) < 100) {
+                    power = 0.1;
+                } else if (Math.abs(dds.distanceError) < 300) {
+                    power = 0.25;
+                } else {
+                    power = 1;
+                }
+                setDrivePower((dds.distanceError > 0) ? power : -power, 0);
             }
-
-            // Move forward
-            setDrivePower((dds.distanceError > 0) ? power : -power, 0);
 
             // then recalculate drive error
             distanceFilter.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
             dds = new DriveToDistanceState(distanceFilter.getMovingAverage(), distanceToObject);
             dds.log(telemetry);
 
-            // Did we just complete rotation? If so, break from loop
-            if(dds.isDistanceWithinRange) {
+            // Are we there? If so, start tracking successive readings.
+            successivePositiveReadings = (dds.isDistanceWithinRange) ? successivePositiveReadings + 1 : 0;
+
+            // Did we just hit the right number of successive readings? If so, break;
+            if(successivePositiveReadings == requiredSuccessiveReadings) {
                 break;
             }
         }
