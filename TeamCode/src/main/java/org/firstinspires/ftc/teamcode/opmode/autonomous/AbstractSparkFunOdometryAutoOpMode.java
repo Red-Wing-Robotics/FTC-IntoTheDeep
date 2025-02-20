@@ -102,13 +102,17 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     public void autoDriveDistance(double targetHeading, double distanceMillimeters, int maxTimeSeconds) {
+        autoDriveDistance(targetHeading, distanceMillimeters, 3, maxTimeSeconds);
+    }
+
+    public void autoDriveDistance(double targetHeading, double distanceMillimeters, int requiredSuccessiveReadings, int maxTimeSeconds) {
         long startingMillis = System.currentTimeMillis();
         rotateRobot(targetHeading, RotationDirection.CLOSEST, maxTimeSeconds * 1000L);
         long remainingMillis = (maxTimeSeconds * 1000L) - (System.currentTimeMillis() - startingMillis);
         if(remainingMillis < 0) {
             return;
         }
-        driveToDistance(distanceMillimeters, 3, remainingMillis);
+        driveToDistance(distanceMillimeters, requiredSuccessiveReadings, remainingMillis);
     }
 
     private void driveRobot(double targetX, double targetY, long maxTimeMilliseconds) {
