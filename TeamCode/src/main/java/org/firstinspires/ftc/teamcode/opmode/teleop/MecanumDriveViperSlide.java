@@ -118,12 +118,12 @@ public class MecanumDriveViperSlide extends OpMode {
     }
 
     private void logPosition() {
-        df.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
-        SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
-        telemetry.addData("Pox X", pos.x);
-        telemetry.addData("Pos Y", pos.y);
-        telemetry.addData("Heading", pos.h);
-        telemetry.addData("Distance: ", df.getMovingAverage());
+        //df.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
+        //SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
+        //telemetry.addData("Pox X", pos.x);
+        //telemetry.addData("Pos Y", pos.y);
+        //telemetry.addData("Heading", pos.h);
+        //telemetry.addData("Distance: ", df.getMovingAverage());
     }
 
     private void controlArm() {
@@ -135,6 +135,8 @@ public class MecanumDriveViperSlide extends OpMode {
             armPos = RobotPosition.ARM_HANG_SPECIMEN;
         } else if ( gamepad1.dpad_left ) {
             armPos = RobotPosition.ARM_HIGH_BASKET;
+        } else if ( gamepad1.x ) {
+            armPos = RobotPosition.ARM_SPECIMEN;
         }
 
         armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
@@ -143,7 +145,10 @@ public class MecanumDriveViperSlide extends OpMode {
     }
 
     private void controlViperSlide() {
-        boolean canExtend = (robot.vsMotor.getCurrentPosition() > -1235 || robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE);
+        boolean canExtend = (robot.vsMotor.getCurrentPosition() > RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT && robot.wrist.getPosition() > 0.3 ||
+                robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE ||
+                robot.vsMotor.getCurrentPosition() > -1800 && robot.wrist.getPosition() < 0.3);
+
         boolean canRetract = robot.vsMotor.getCurrentPosition() < 0;
 
         int VARIANCE = 50;
@@ -168,6 +173,12 @@ public class MecanumDriveViperSlide extends OpMode {
         if (gamepad2.x) {
             robot.setWristPosition(RobotPosition.WRIST_DOWN);
         } else if (gamepad2.y) {
+            if( robot.vsMotor.getCurrentPosition() < RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT && robot.armMotor.getCurrentPosition() <= 74 * RobotPosition.ARM_TICKS_PER_DEGREE)
+            {
+                vsPos = RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT;
+                robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT );
+                sleep(200);
+            }
             robot.setWristPosition(RobotPosition.WRIST_MID);
         }
     }
