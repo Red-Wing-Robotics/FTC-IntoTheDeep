@@ -19,7 +19,7 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
     @Override
     void runOdometryDrive() {
         robot.hangSpecimen();
-        autoDrive( -5, 28, 2);
+        autoDrive( -5, 30, 2);
         sleep(100);
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
         robot.setViperSlidePosition( 0 );
@@ -35,10 +35,10 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         //autoDrive(46, 52, 180, 1);
         //autoDrive(46, 8, 180,2);
         //autoDrive(46, 18, 180,2);
-        autoDrive(38, 28, 180, 2);
+        autoDrive(38, 29, 180, 2);
         robot.setArmPosition(RobotPosition.ARM_SPECIMEN);
         autoDrive(38, 10, 180,2);
-        autoDriveDistance( 180, 350, 2);
+        //autoDriveDistance( 180, 280, 2);
         robot.setWristPosition( RobotPosition.WRIST_MID );
         sleep(750);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
@@ -50,15 +50,17 @@ public class ObservationZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
 
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
         robot.setViperSlidePosition( 0 );
-        //robot.setWristPosition( RobotPosition.WRIST_IN );
-        autoDrive(-7,10,5);
+        robot.setWristPosition( RobotPosition.WRIST_IN );
+        autoDrive(-7,10, 0,5);
         //robot.setArmPosition( RobotPosition.ARM_ORIGIN );
         autoDrive(38, 18, 180, 5);
         robot.setArmPosition(RobotPosition.ARM_SPECIMEN);
         //robot.setClawPosition( RobotPosition.CLAW_OPEN );
         //robot.setWristPosition( RobotPosition.WRIST_MID );
         autoDrive(38, 10, 180, 2);
-        autoDriveDistance( 180, 350, 2);
+        //autoDrive( -175, 1);
+        //autoDriveDistance( -175, 280, 2);
+        robot.setWristPosition( RobotPosition.WRIST_MID );
         sleep(750);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(200);

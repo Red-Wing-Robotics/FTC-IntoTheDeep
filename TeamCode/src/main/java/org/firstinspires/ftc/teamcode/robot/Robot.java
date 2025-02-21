@@ -36,7 +36,7 @@ public class Robot extends AbstractSparkFunRobot {
 
     public int armPosition = RobotPosition.ARM_ORIGIN;
     private double armPower = 1.0d;
-    public int vsPosition = 0;
+    public int vsPosition = 60;
     private double vsPower = 1.0d;
     public double clawPosition = RobotPosition.CLAW_CLOSED;
     public double wristPosition = RobotPosition.WRIST_IN;

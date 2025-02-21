@@ -31,8 +31,8 @@ public class NetZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
         robot.setWristPosition( RobotPosition.WRIST_MID );
         sleep(400);
-        autoDrive(-11,26,0,2);
-        robot.setViperSlidePosition( -150 );
+        autoDrive(-11,25,0,2);
+        robot.setViperSlidePosition( -260 );
         sleep(400);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(400);
@@ -51,16 +51,17 @@ public class NetZoneAuto extends AbstractSparkFunOdometryAutoOpMode {
         robot.setWristPosition( RobotPosition.WRIST_MID );
         sleep(400);
         autoDrive(-22,25,0,2);
-        robot.setViperSlidePosition( -150 );
+        robot.setViperSlidePosition( -260 );
         sleep(400);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(400);
         robot.setViperSlidePosition( 0 );
         robot.setWristPosition( RobotPosition.WRIST_SPECIMEN );
         robot.setArmPosition( RobotPosition.ARM_HIGH_BASKET );
-        autoDrive(-20,6,135,5);
+        autoDrive(-20,6,135,2);
         autoDrive(-19,6,135,1);
         robot.scoreInHighBasket();
+        autoDrive( 0, 2);
 /*
         autoDrive(-7,2,0,2);
         autoDrive(0,2,0,2);
