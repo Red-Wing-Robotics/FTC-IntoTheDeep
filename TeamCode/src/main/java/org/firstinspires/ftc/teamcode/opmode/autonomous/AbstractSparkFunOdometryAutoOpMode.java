@@ -102,7 +102,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     public void autoDriveDistance(double targetHeading, double distanceMillimeters, int maxTimeSeconds) {
-        autoDriveDistance(targetHeading, distanceMillimeters, 3, maxTimeSeconds);
+        autoDriveDistance(targetHeading, distanceMillimeters, 6, maxTimeSeconds);
     }
 
     public void autoDriveDistance(double targetHeading, double distanceMillimeters, int requiredSuccessiveReadings, int maxTimeSeconds) {
