@@ -50,6 +50,10 @@ public class Robot extends AbstractSparkFunRobot {
 
     @Override
     public void configureHardware() {
+        configureHardware(true);
+    }
+
+    public void configureHardware(boolean configureOdometry) {
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "frontLeftMotor");
@@ -95,7 +99,9 @@ public class Robot extends AbstractSparkFunRobot {
         setRobotAttachmentPositions();
 
         // Run configureHardware in parent class (which initializes sparkfun chip)
-        super.configureHardware();
+        if(configureOdometry) {
+            super.configureHardware();
+        }
     }
 
     public void disableDriveControls() {

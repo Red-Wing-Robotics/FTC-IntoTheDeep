@@ -61,7 +61,7 @@ public class MecanumDriveViperSlide extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap, telemetry);
-        robot.configureHardware();
+        robot.configureHardware(false);
         df = new MovingAverageFilter(5);
     }
 
@@ -145,9 +145,22 @@ public class MecanumDriveViperSlide extends OpMode {
     }
 
     private void controlViperSlide() {
-        boolean canExtend = (robot.vsMotor.getCurrentPosition() > RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT && robot.wrist.getPosition() > 0.3 ||
-                robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE ||
-                robot.vsMotor.getCurrentPosition() > -1800 && robot.wrist.getPosition() < 0.3);
+
+        telemetry.addData("Wrist Position: ", robot.wrist.getPosition());
+
+        boolean isWristUp = robot.wrist.getPosition() > 0.3;
+        boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > -1200;
+        boolean isArmAboveLowestPosition = robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE;
+        boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > -1800;
+
+        telemetry.addData("Is Wrist Down: ", isWristUp);
+        telemetry.addData("Is VS Fully Extended: ", isViperSlideNotFullyExtended);
+        telemetry.addData("Is Arm Above Lowest: ", isArmAboveLowestPosition);
+        telemetry.addData("Is Viper Slide Fully Extended (Long Pos): ", isViperSlideFullyExtended);
+
+        boolean canExtend = ((isViperSlideNotFullyExtended && isWristUp) ||
+                isArmAboveLowestPosition ||
+                (isViperSlideFullyExtended && !isWristUp));
 
         boolean canRetract = robot.vsMotor.getCurrentPosition() < 0;
 
