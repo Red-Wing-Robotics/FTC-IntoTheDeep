@@ -149,9 +149,9 @@ public class MecanumDriveViperSlide extends OpMode {
         telemetry.addData("Wrist Position: ", robot.wrist.getPosition());
 
         boolean isWristUp = robot.wrist.getPosition() > 0.3;
-        boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > -1200;
+        boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > -1000;
         boolean isArmAboveLowestPosition = robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE;
-        boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > -1800;
+        boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > -1450;
 
         telemetry.addData("Is Wrist Down: ", isWristUp);
         telemetry.addData("Is VS Fully Extended: ", isViperSlideNotFullyExtended);
