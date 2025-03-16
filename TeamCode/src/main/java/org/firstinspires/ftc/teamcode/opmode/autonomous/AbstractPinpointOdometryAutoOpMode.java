@@ -13,7 +13,7 @@ abstract class AbstractPinpointOdometryAutoOpMode extends AbstractSparkFunOdomet
     @Override
     protected SparkFunOTOS.Pose2D myPosition() {
         Pose2D pos = robot.odo.getPosition();
-        return new SparkFunOTOS.Pose2D(pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
+        return new SparkFunOTOS.Pose2D(pos.getY(DistanceUnit.INCH), pos.getX(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
     }
-    
+
 }
