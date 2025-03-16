@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Robot extends AbstractSparkFunRobot {
+public class Robot extends AbstractPinpointRobot {
 
     // Motors --------------------------------------------------------
 

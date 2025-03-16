@@ -27,7 +27,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     public double MAX_AUTO_SPEED = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public double MAX_AUTO_STRAFE = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public double MAX_AUTO_ROTATE = 1.0d;
-    private final ElapsedTime runtime = new ElapsedTime();
+    protected final ElapsedTime runtime = new ElapsedTime();
     private HeadingSource headingSource = HeadingSource.SPARKFUN;
 
     public Robot robot = null;
@@ -67,7 +67,7 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     // This is an expensive call - we should only do this once per loop
-    private SparkFunOTOS.Pose2D myPosition() {
+    protected SparkFunOTOS.Pose2D myPosition() {
         SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
         if(headingSource == HeadingSource.SPARKFUN) {
             return new SparkFunOTOS.Pose2D(pos.x, pos.y, pos.h);

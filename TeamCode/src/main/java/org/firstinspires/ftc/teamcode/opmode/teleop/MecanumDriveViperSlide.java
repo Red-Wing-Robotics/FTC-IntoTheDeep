@@ -5,10 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.RobotPosition;
 import org.firstinspires.ftc.teamcode.util.MovingAverageFilter;
+
+import java.util.Locale;
 
 @SuppressWarnings("unused")
 @TeleOp(name = "Mecanum Viper Slide")
@@ -61,12 +65,15 @@ public class MecanumDriveViperSlide extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap, telemetry);
-        robot.configureHardware(false);
+        robot.configureHardware(true);
         df = new MovingAverageFilter(5);
     }
 
     @Override
     public void loop() {
+        // Update odometry
+        robot.odo.update();
+
         // Drive Functionality
         // GAMEPAD 1 : Left and Right Stick
         mecanumTankDrive();
@@ -118,12 +125,10 @@ public class MecanumDriveViperSlide extends OpMode {
     }
 
     private void logPosition() {
-        //df.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
-        //SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
-        //telemetry.addData("Pox X", pos.x);
-        //telemetry.addData("Pos Y", pos.y);
-        //telemetry.addData("Heading", pos.h);
-        //telemetry.addData("Distance: ", df.getMovingAverage());
+        Pose2D pos = robot.odo.getPosition();
+        String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
+        telemetry.addData("Position", data);
+        telemetry.addData("Status", robot.odo.getDeviceStatus());
     }
 
     private void controlArm() {
@@ -146,17 +151,10 @@ public class MecanumDriveViperSlide extends OpMode {
 
     private void controlViperSlide() {
 
-        telemetry.addData("Wrist Position: ", robot.wrist.getPosition());
-
         boolean isWristUp = robot.wrist.getPosition() > 0.3;
         boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > -1000;
         boolean isArmAboveLowestPosition = robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE;
         boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > -1450;
-
-        telemetry.addData("Is Wrist Down: ", isWristUp);
-        telemetry.addData("Is VS Fully Extended: ", isViperSlideNotFullyExtended);
-        telemetry.addData("Is Arm Above Lowest: ", isArmAboveLowestPosition);
-        telemetry.addData("Is Viper Slide Fully Extended (Long Pos): ", isViperSlideFullyExtended);
 
         boolean canExtend = ((isViperSlideNotFullyExtended && isWristUp) ||
                 isArmAboveLowestPosition ||
@@ -173,7 +171,6 @@ public class MecanumDriveViperSlide extends OpMode {
         }
 
         robot.setViperSlidePosition(vsPos);
-        telemetry.addData("Viper Slide Motor Position", robot.vsMotor.getCurrentPosition());
     }
 
     private void controlServos() {
