@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
