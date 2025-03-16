@@ -35,7 +35,7 @@ public class AbstractPinpointRobot extends AbstractSparkFunRobot {
         increase when you move the robot forward. And the Y (strafe) pod should increase when
         you move the robot to the left.
          */
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         /*
         Before running the robot, recalibrate the IMU. This needs to happen when the robot is stationary
