@@ -2,15 +2,12 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.RobotPosition;
 import org.firstinspires.ftc.teamcode.util.MovingAverageFilter;
+import org.firstinspires.ftc.teamcode.util.SleepUtils;
 
-@SuppressWarnings("unused")
-@TeleOp(name = "Mecanum Viper Slide")
-public class MecanumDriveViperSlide extends OpMode {
+abstract class AbstractTeleOp extends OpMode {
 
     //---------------------------------------------
     // CONSTANTS
@@ -48,6 +45,8 @@ public class MecanumDriveViperSlide extends OpMode {
 
     double armPositionFudgeFactor = 0.0d;
 
+    protected boolean logPosition = true;
+
     MovingAverageFilter df;
 
     Robot robot;
@@ -57,11 +56,7 @@ public class MecanumDriveViperSlide extends OpMode {
     //---------------------------------------------
 
     @Override
-    public void init() {
-        robot = new Robot(hardwareMap, telemetry);
-        robot.configureHardware(true);
-        df = new MovingAverageFilter(5);
-    }
+    abstract public void init();
 
     @Override
     public void loop() {
@@ -93,8 +88,11 @@ public class MecanumDriveViperSlide extends OpMode {
         controlServos();
 
         // Log Position
-        robot.odometryProvider.logPosition();
+        if(logPosition) {
+            robot.odometryProvider.logPosition();
+        }
 
+        // Send Telemetry Data
         telemetry.update();
     }
 
@@ -176,7 +174,7 @@ public class MecanumDriveViperSlide extends OpMode {
             {
                 vsPos = RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT;
                 robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT );
-                sleep(200);
+                SleepUtils.sleep(200);
             }
             robot.setWristPosition(RobotPosition.WRIST_MID);
         }
@@ -197,14 +195,6 @@ public class MecanumDriveViperSlide extends OpMode {
             vsPos = robot.vsMotor.getCurrentPosition();
             armPos = robot.armMotor.getCurrentPosition();
             scoringOnChamber = false;
-        }
-    }
-
-    public final void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         }
     }
 
