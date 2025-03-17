@@ -97,8 +97,7 @@ public class Robot extends AbstractRobot {
         // Will move the "attachments" to their starting positions
         setRobotAttachmentPositions();
 
-        // Run configureHardware in parent class (which initializes sparkfun chip)
-        // TODO - determine how to handle this
+        // Run configureHardware in parent class (which initializes odometry sensors)
         if(configureOdometry) {
             odometryProvider.configure();
         }
