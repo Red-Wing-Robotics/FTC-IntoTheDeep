@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotPosition;
 
 @SuppressWarnings("unused")
 @Autonomous(name="Observation Zone Auto", group="RWR")
-public class ObservationZoneAuto extends AbstractPinpointOdometryAutoOpMode {
+public class ObservationZoneAuto extends AbstractAutoOpMode {
 
     @Override
     void configureAutoDrive() {

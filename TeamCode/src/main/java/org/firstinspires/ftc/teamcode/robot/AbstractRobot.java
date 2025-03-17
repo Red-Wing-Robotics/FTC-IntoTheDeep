@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.odometry.OdometryProvider;
 
 public abstract class AbstractRobot {
 
@@ -10,9 +11,12 @@ public abstract class AbstractRobot {
 
     protected final HardwareMap hardwareMap;
 
-    public AbstractRobot(HardwareMap hardwareMap, Telemetry telemetry) {
+    public OdometryProvider odometryProvider;
+
+    public AbstractRobot(HardwareMap hardwareMap, Telemetry telemetry, OdometryProvider odometryProvider) {
         this.telemetry = telemetry;
         this.hardwareMap = hardwareMap;
+        this.odometryProvider = odometryProvider;
     }
 
     public final void sleep(long milliseconds) {

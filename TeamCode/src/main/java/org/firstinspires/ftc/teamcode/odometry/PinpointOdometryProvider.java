@@ -1,25 +1,24 @@
-package org.firstinspires.ftc.teamcode.robot;
+package org.firstinspires.ftc.teamcode.odometry;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.drivers.GoBildaPinpointDriver;
 
-public class AbstractPinpointRobot extends AbstractSparkFunRobot {
+public class PinpointOdometryProvider extends AbstractOdometryProvider {
 
-    public GoBildaPinpointDriver odo;
+    final private GoBildaPinpointDriver pinpoint;
 
-    public AbstractPinpointRobot(HardwareMap hardwareMap, Telemetry telemetry) {
+    public PinpointOdometryProvider(String sensorName, HardwareMap hardwareMap, Telemetry telemetry) {
         super(hardwareMap, telemetry);
+        this.pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, sensorName);
     }
 
     @Override
-    public void configureHardware() {
-        // Get from hardware map
-        odo = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
-
+    public void configure() {
         // Determine where to fit?
-        odo.setOffsets(0, 0); //these are tuned for 3110-0002-0001 Product Insight #1
+        pinpoint.setOffsets(0, 0); //these are tuned for 3110-0002-0001 Product Insight #1
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -27,7 +26,7 @@ public class AbstractPinpointRobot extends AbstractSparkFunRobot {
         If you're using another kind of odometry pod, uncomment setEncoderResolution and input the
         number of ticks per mm of your odometry pod.
          */
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
 
 
         /*
@@ -35,7 +34,7 @@ public class AbstractPinpointRobot extends AbstractSparkFunRobot {
         increase when you move the robot forward. And the Y (strafe) pod should increase when
         you move the robot to the left.
          */
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
         /*
         Before running the robot, recalibrate the IMU. This needs to happen when the robot is stationary
@@ -45,7 +44,18 @@ public class AbstractPinpointRobot extends AbstractSparkFunRobot {
         This is recommended before you run your autonomous, as a bad initial calibration can cause
         an incorrect starting value for x, y, and heading.
          */
-        odo.resetPosAndIMU();
-        super.configureHardware();
+        pinpoint.resetPosAndIMU();
     }
+
+    @Override
+    public Pose2D getPosition() {
+        Pose2D pos = this.pinpoint.getPosition();
+        return new Pose2D(this.linearUnit, pos.getY(this.linearUnit), pos.getX(this.linearUnit), this.angleUnit, pos.getHeading(this.angleUnit));
+    }
+
+    @Override
+    public void onLoop() {
+        pinpoint.update();
+    }
+
 }

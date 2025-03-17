@@ -9,8 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.odometry.OdometryProvider;
+import org.firstinspires.ftc.teamcode.odometry.PinpointOdometryProvider;
 
-public class Robot extends AbstractPinpointRobot {
+public class Robot extends AbstractRobot {
 
     // Motors --------------------------------------------------------
 
@@ -28,8 +30,6 @@ public class Robot extends AbstractPinpointRobot {
 
     // Sensors -------------------------------------------------------
 
-    public IMU imu = null; // BHI260AP
-
     public Rev2mDistanceSensor distanceSensor; // 'Distance Sensor'
 
     // Local variables -----------------------------------------------
@@ -41,11 +41,18 @@ public class Robot extends AbstractPinpointRobot {
     public double clawPosition = RobotPosition.CLAW_CLOSED;
     public double wristPosition = RobotPosition.WRIST_IN;
 
-
     private boolean isDriveEnabled = true;
 
+    public static OdometryProvider getDefaultOdometryProvider(HardwareMap hardwareMap, Telemetry telemetry) {
+        return new PinpointOdometryProvider("pinpoint", hardwareMap, telemetry);
+    }
+
     public Robot(HardwareMap hardwareMap, Telemetry telemetry) {
-        super(hardwareMap, telemetry);
+        super(hardwareMap, telemetry, Robot.getDefaultOdometryProvider(hardwareMap, telemetry));
+    }
+
+    public Robot(HardwareMap hardwareMap, Telemetry telemetry, OdometryProvider odometryProvider) {
+        super(hardwareMap, telemetry, odometryProvider);
     }
 
     @Override
@@ -63,12 +70,12 @@ public class Robot extends AbstractPinpointRobot {
         vsMotor = hardwareMap.get(DcMotor.class, "viperSlideMotor");
         armMotor = hardwareMap.get(DcMotor.class, "arm2");
 
-        imu = hardwareMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
-        imu.resetYaw();
+//        imu = hardwareMap.get(IMU.class, "imu");
+//        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+//        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+//        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+//        imu.initialize(new IMU.Parameters(orientationOnRobot));
+//        imu.resetYaw();
 
         distanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "DistanceSensor");
 
@@ -99,8 +106,9 @@ public class Robot extends AbstractPinpointRobot {
         setRobotAttachmentPositions();
 
         // Run configureHardware in parent class (which initializes sparkfun chip)
+        // TODO - determine how to handle this
         if(configureOdometry) {
-            super.configureHardware();
+            odometryProvider.configure();
         }
     }
 

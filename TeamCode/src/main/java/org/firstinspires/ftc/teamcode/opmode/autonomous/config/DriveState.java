@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmode.autonomous.config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.odometry.OdometryProvider;
 
 public class DriveState {
 
@@ -24,14 +26,15 @@ public class DriveState {
 
     public final boolean isDriveWithinRange;
 
-    public DriveState(SparkFunOTOS.Pose2D currentPos, double targetX, double targetY) {
-        x = currentPos.x;
-        y = currentPos.y;
-        h = currentPos.h;
+    public DriveState(OdometryProvider odometryProvider, double targetX, double targetY) {
+        Pose2D pos = odometryProvider.getPosition();
+        x = pos.getX(odometryProvider.getDistanceUnit());
+        y = pos.getY(odometryProvider.getDistanceUnit());
+        h = pos.getHeading(odometryProvider.getAngleUnit());
         this.targetX = targetX;
         this.targetY = targetY;
-        xError = targetX-currentPos.x;
-        yError = targetY-currentPos.y;
+        xError = targetX-this.x;
+        yError = targetY-this.y;
         isDriveWithinRange = (Math.abs(xError) <= DRIVE_POSITION_FUDGE) && (Math.abs(yError) <= DRIVE_POSITION_FUDGE);
     }
 

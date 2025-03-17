@@ -17,10 +17,7 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.util.MathUtils;
 import org.firstinspires.ftc.teamcode.util.MovingAverageFilter;
 
-/**
- *
- */
-abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
+abstract class AbstractAutoOpMode extends LinearOpMode {
 
     public double SPEED_GAIN  =  0.03;   // The default value ramps up to 50% power at a 25 inch error. (0.50 / 25.0)
     public double STRAFE_GAIN =  0.15;   // 0.015 Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
@@ -66,17 +63,6 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         headingSource = source;
     }
 
-    // This is an expensive call - we should only do this once per loop
-    protected SparkFunOTOS.Pose2D myPosition() {
-        SparkFunOTOS.Pose2D pos = robot.myOtos.getPosition();
-        if(headingSource == HeadingSource.SPARKFUN) {
-            return new SparkFunOTOS.Pose2D(pos.x, pos.y, pos.h);
-        } else {
-            double heading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-            return new SparkFunOTOS.Pose2D(pos.x, pos.y, heading);
-        }
-    }
-
     public void autoDrive(double targetX, double targetY, int maxTimeSeconds) {
         driveRobot(targetX, targetY, maxTimeSeconds * 1000L);
     }
@@ -116,14 +102,19 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     private void driveRobot(double targetX, double targetY, long maxTimeMilliseconds) {
+        // Update position
+        robot.odometryProvider.onLoop();
+
         // Get Diff for all values
-        DriveState ds = new DriveState(myPosition(), targetX, targetY);
+        DriveState ds = new DriveState(robot.odometryProvider, targetX, targetY);
 
         double drive, strafe, currentYawRadians, rotX, rotY;
 
         runtime.reset();
 
         boolean shouldDrive = !ds.isDriveWithinRange;
+
+
 
         while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldDrive) {
             currentYawRadians = Math.toRadians(ds.h);
@@ -137,8 +128,11 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
 
             setDrivePower(drive, -strafe);
 
+            // Update position
+            robot.odometryProvider.onLoop();
+
             // then recalculate drive error
-            ds = new DriveState(myPosition(), targetX, targetY);
+            ds = new DriveState(robot.odometryProvider, targetX, targetY);
             ds.log(telemetry);
 
             // Did we just complete drive? If so, break from loop
@@ -150,6 +144,9 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     private void driveToDistance(double distanceToObject, int requiredSuccessiveReadings, long maxTimeMilliseconds) {
+        // Update position
+        robot.odometryProvider.onLoop();
+
         // Create moving average (low pass) filter
         MovingAverageFilter distanceFilter = new MovingAverageFilter(5);
         distanceFilter.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
@@ -182,6 +179,9 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             dds = new DriveToDistanceState(distanceFilter.getMovingAverage(), distanceToObject);
             dds.log(telemetry);
 
+            // Update position
+            robot.odometryProvider.onLoop();
+
             // Are we there? If so, start tracking successive readings.
             successivePositiveReadings = (dds.isDistanceWithinRange) ? successivePositiveReadings + 1 : 0;
 
@@ -194,8 +194,11 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     private void rotateRobot(double targetHeading, RotationDirection direction, long maxTimeMilliseconds) {
+        // Update position
+        robot.odometryProvider.onLoop();
+
         // Get Diff for all values
-        RotateState rs = new RotateState(myPosition(), targetHeading, direction);
+        RotateState rs = new RotateState(robot.odometryProvider, targetHeading, direction);
 
         runtime.reset();
 
@@ -219,8 +222,11 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
             power = Math.min(power, MAX_AUTO_ROTATE);
             setRotatePower(power, direction);
 
+            // Update position
+            robot.odometryProvider.onLoop();
+
             // then recalculate drive error
-            rs = new RotateState(myPosition(), targetHeading, direction);
+            rs = new RotateState(robot.odometryProvider, targetHeading, direction);
             rs.log(telemetry);
 
             // Did we just complete rotation? If so, break from loop

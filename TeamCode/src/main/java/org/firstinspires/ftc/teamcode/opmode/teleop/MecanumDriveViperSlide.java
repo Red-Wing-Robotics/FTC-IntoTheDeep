@@ -4,14 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.RobotPosition;
 import org.firstinspires.ftc.teamcode.util.MovingAverageFilter;
-
-import java.util.Locale;
 
 @SuppressWarnings("unused")
 @TeleOp(name = "Mecanum Viper Slide")
@@ -70,8 +65,8 @@ public class MecanumDriveViperSlide extends OpMode {
 
     @Override
     public void loop() {
-        // Update odometry
-        robot.odo.update();
+        // Update odometry for loop
+        robot.odometryProvider.onLoop();
 
         // Drive Functionality
         // GAMEPAD 1 : Left and Right Stick
@@ -98,7 +93,7 @@ public class MecanumDriveViperSlide extends OpMode {
         controlServos();
 
         // Log Position
-        logPosition();
+        robot.odometryProvider.logPosition();
 
         telemetry.update();
     }
@@ -123,13 +118,6 @@ public class MecanumDriveViperSlide extends OpMode {
         robot.setDrivePower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
     }
 
-    private void logPosition() {
-        Pose2D pos = robot.odo.getPosition();
-        String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
-        telemetry.addData("Position", data);
-        telemetry.addData("Status", robot.odo.getDeviceStatus());
-    }
-
     private void controlArm() {
         if( gamepad1.dpad_down ){
             armPos = RobotPosition.ARM_ORIGIN;
@@ -150,26 +138,28 @@ public class MecanumDriveViperSlide extends OpMode {
 
     private void controlViperSlide() {
 
-        boolean isWristUp = robot.wrist.getPosition() > 0.3;
-        boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > -1000;
-        boolean isArmAboveLowestPosition = robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE;
-        boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > -1450;
-
-        boolean canExtend = ((isViperSlideNotFullyExtended && isWristUp) ||
-                isArmAboveLowestPosition ||
-                (isViperSlideFullyExtended && !isWristUp));
-
         boolean canRetract = robot.vsMotor.getCurrentPosition() < 0;
 
         int VARIANCE = 50;
 
         if (gamepad2.dpad_down && canRetract ) {
             vsPos = Math.min(0, vsPos + VARIANCE);
-        } else if (gamepad2.dpad_up && canExtend ) {
+        } else if (gamepad2.dpad_up && canExtend() ) {
             vsPos = Math.max(RobotPosition.VIPER_SLIDE_FULLY_EXTENDED, vsPos - VARIANCE);
         }
 
         robot.setViperSlidePosition(vsPos);
+    }
+
+    private boolean canExtend() {
+        boolean isWristUp = robot.wrist.getPosition() > 0.3;
+        boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > -1000;
+        boolean isArmAboveLowestPosition = robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE;
+        boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > -1450;
+
+        return ((isViperSlideNotFullyExtended && isWristUp) ||
+                isArmAboveLowestPosition ||
+                (isViperSlideFullyExtended && !isWristUp));
     }
 
     private void controlServos() {
