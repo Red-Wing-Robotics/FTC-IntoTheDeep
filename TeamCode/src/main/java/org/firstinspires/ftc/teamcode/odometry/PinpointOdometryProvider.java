@@ -50,7 +50,7 @@ public class PinpointOdometryProvider extends AbstractOdometryProvider {
     @Override
     public Pose2D getPosition() {
         Pose2D pos = this.pinpoint.getPosition();
-        return new Pose2D(this.linearUnit, pos.getY(this.linearUnit), pos.getX(this.linearUnit), this.angleUnit, pos.getHeading(this.angleUnit));
+        return new Pose2D(distanceUnit, pos.getY(distanceUnit), pos.getX(distanceUnit), this.angleUnit, pos.getHeading(angleUnit));
     }
 
     @Override

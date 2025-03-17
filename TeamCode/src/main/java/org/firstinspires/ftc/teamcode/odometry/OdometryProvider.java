@@ -8,10 +8,12 @@ public interface OdometryProvider {
 
     DistanceUnit getDistanceUnit();
 
+    @SuppressWarnings("unused")
     void setDistanceUnit(DistanceUnit distanceUnit);
 
     AngleUnit getAngleUnit();
 
+    @SuppressWarnings("unused")
     void setAngleUnit(AngleUnit angleUnit);
 
     void logPosition();

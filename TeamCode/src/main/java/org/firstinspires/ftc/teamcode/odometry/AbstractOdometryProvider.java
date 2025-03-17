@@ -46,20 +46,12 @@ abstract class AbstractOdometryProvider implements OdometryProvider {
 
     public void logPosition() {
         Pose2D pos = getPosition();
-        String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(this.linearUnit), pos.getY(this.linearUnit), pos.getHeading(this.angleUnit));
+        String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(distanceUnit), pos.getY(distanceUnit), pos.getHeading(angleUnit));
         telemetry.addData("Position", data);
     }
 
     abstract public Pose2D getPosition();
 
     abstract public void onLoop();
-
-    protected final void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
 
 }

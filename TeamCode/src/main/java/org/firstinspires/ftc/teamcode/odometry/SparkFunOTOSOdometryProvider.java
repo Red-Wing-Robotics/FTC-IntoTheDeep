@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.util.SleepUtils;
 
 import java.util.Locale;
 
+@SuppressWarnings("unused")
 public class SparkFunOTOSOdometryProvider extends AbstractOdometryProvider {
 
     public final SparkFunOTOS.Pose2D startingPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
@@ -30,7 +32,7 @@ public class SparkFunOTOSOdometryProvider extends AbstractOdometryProvider {
         telemetry.addLine("Configuring OTOS...");
         telemetry.update();
 
-        sparkFun.setLinearUnit(linearUnit);
+        sparkFun.setLinearUnit(distanceUnit);
         sparkFun.setAngularUnit(angleUnit);
         sparkFun.setOffset(offset);
         double angularScalar = 1.00896539d;
@@ -40,10 +42,10 @@ public class SparkFunOTOSOdometryProvider extends AbstractOdometryProvider {
         sparkFun.setLinearScalar(linearScalar);
         sparkFun.calibrateImu();
         // Allow sleep for calibration to complete
-        sleep(2000);
+        SleepUtils.sleep(2000);
         sparkFun.resetTracking();
         // Allow sleep to reset tracking (likely not needed)
-        sleep(2000);
+        SleepUtils.sleep(2000);
         //sparkFun.setPosition(startingPosition);
 
         // Get the hardware and firmware version
@@ -66,7 +68,7 @@ public class SparkFunOTOSOdometryProvider extends AbstractOdometryProvider {
         // and causes it to behave like the Pinpoint on position reads.
         if(updatePosition) {
             SparkFunOTOS.Pose2D pos = this.sparkFun.getPosition();
-            return new Pose2D(this.linearUnit, pos.x, pos.y, this.angleUnit, pos.h);
+            return new Pose2D(this.distanceUnit, pos.x, pos.y, this.angleUnit, pos.h);
         }
         return position;
     }

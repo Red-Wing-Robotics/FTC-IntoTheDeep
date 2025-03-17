@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous.config;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.odometry.OdometryProvider;

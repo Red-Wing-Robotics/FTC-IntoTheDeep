@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.DriveState;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.DriveToDistanceState;
-import org.firstinspires.ftc.teamcode.opmode.autonomous.config.HeadingSource;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.RotateState;
 import org.firstinspires.ftc.teamcode.opmode.autonomous.config.RotationDirection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
@@ -25,7 +22,6 @@ abstract class AbstractAutoOpMode extends LinearOpMode {
     public double MAX_AUTO_STRAFE = 0.4;   //  Clip the approach speed to this max value (adjust for your robot)
     public double MAX_AUTO_ROTATE = 1.0d;
     protected final ElapsedTime runtime = new ElapsedTime();
-    private HeadingSource headingSource = HeadingSource.SPARKFUN;
 
     public Robot robot = null;
 
@@ -59,10 +55,6 @@ abstract class AbstractAutoOpMode extends LinearOpMode {
 
     abstract void configureAutoDrive();
 
-    public void setHeadingSource(HeadingSource source) {
-        headingSource = source;
-    }
-
     public void autoDrive(double targetX, double targetY, int maxTimeSeconds) {
         driveRobot(targetX, targetY, maxTimeSeconds * 1000L);
     }
@@ -83,10 +75,12 @@ abstract class AbstractAutoOpMode extends LinearOpMode {
         rotateRobot(targetHeading, RotationDirection.CLOSEST, maxTimeSeconds * 1000L);
     }
 
+    @SuppressWarnings("unused")
     public void autoDrive(double targetHeading, RotationDirection direction, int maxTimeSeconds) {
         rotateRobot(targetHeading, direction, maxTimeSeconds * 1000L);
     }
 
+    @SuppressWarnings("unused")
     public void autoDriveDistance(double targetHeading, double distanceMillimeters, int maxTimeSeconds) {
         autoDriveDistance(targetHeading, distanceMillimeters, 6, maxTimeSeconds);
     }
