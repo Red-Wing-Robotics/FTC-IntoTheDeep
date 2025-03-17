@@ -15,6 +15,7 @@ abstract class AbstractTeleOp extends OpMode {
 
     // ARM ----------------------------------------
 
+    @SuppressWarnings("unused")
     final double[] ARM_POSITIONS = {
             RobotPosition.ARM_ORIGIN,
             RobotPosition.ARM_SUBMERSIBLE,
@@ -33,11 +34,15 @@ abstract class AbstractTeleOp extends OpMode {
     // ARM ----------------------------------------
 
     double armPos = RobotPosition.ARM_ORIGIN; // the variable which the arm motor position will be set to
+
+    @SuppressWarnings("unused")
     int posIdx = 0; // variable to track what index of ARM_POSITIONS is being used
     int vsPos = RobotPosition.VIPER_SLIDE_ORIGIN;
 
     // variables telling whether or not the arm can be moved forward or backward
+    @SuppressWarnings("unused")
     boolean armForward = true;
+    @SuppressWarnings("unused")
     boolean armBackward = true;
 
     boolean scoringInBasket = false;
