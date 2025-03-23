@@ -19,9 +19,9 @@ public class NetZoneAuto extends AbstractPinpointOdometryAutoOpMode {
     @Override
     void runOdometryDrive() {
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
-        autoDrive(0,6,0,2);
+        //autoDrive(0,6,0,2);
         robot.setArmPosition( RobotPosition.ARM_HIGH_BASKET );
-        autoDrive(-18,7,0,3);
+        autoDrive(-18,7,0,1);
         autoDrive(135,2);
         robot.scoreInHighBasket();
         //autoDrive(-11,18,0,2);

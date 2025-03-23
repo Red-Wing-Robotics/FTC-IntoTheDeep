@@ -116,6 +116,9 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     private void driveRobot(double targetX, double targetY, long maxTimeMilliseconds) {
+        // Update odometry
+        robot.odo.update();
+
         // Get Diff for all values
         DriveState ds = new DriveState(myPosition(), targetX, targetY);
 
@@ -126,6 +129,9 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         boolean shouldDrive = !ds.isDriveWithinRange;
 
         while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldDrive) {
+            // Update odometry
+            robot.odo.update();
+            
             currentYawRadians = Math.toRadians(ds.h);
             rotY = ds.xError * Math.cos(currentYawRadians) - ds.yError * Math.sin(currentYawRadians);
             rotX = ds.xError * Math.sin(currentYawRadians) + ds.yError * Math.cos(currentYawRadians);
@@ -150,6 +156,9 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     private void driveToDistance(double distanceToObject, int requiredSuccessiveReadings, long maxTimeMilliseconds) {
+        // Update odometry
+        robot.odo.update();
+
         // Create moving average (low pass) filter
         MovingAverageFilter distanceFilter = new MovingAverageFilter(5);
         distanceFilter.add(robot.distanceSensor.getDistance(DistanceUnit.MM));
@@ -165,6 +174,8 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         double power;
 
         while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldDrive) {
+            // Update odometry
+            robot.odo.update();
 
             if(!dds.isDistanceWithinRange) {
                 if (Math.abs(dds.distanceError) < 100) {
@@ -194,6 +205,9 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
     }
 
     private void rotateRobot(double targetHeading, RotationDirection direction, long maxTimeMilliseconds) {
+        // Update odometry
+        robot.odo.update();
+
         // Get Diff for all values
         RotateState rs = new RotateState(myPosition(), targetHeading, direction);
 
@@ -207,6 +221,8 @@ abstract class AbstractSparkFunOdometryAutoOpMode extends LinearOpMode {
         }
 
         while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldRotate) {
+            // Update odometry
+            robot.odo.update();
 
             if(Math.abs(rs.yawError) < 10) {
                 power = 0.2;
