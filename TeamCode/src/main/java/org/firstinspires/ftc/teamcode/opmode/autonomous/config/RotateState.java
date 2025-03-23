@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous.config;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.odometry.OdometryProvider;
 
 public class RotateState {
 
@@ -28,13 +28,14 @@ public class RotateState {
         return (modDelta > 180.0 ? 360.0 - modDelta : modDelta);
     }
 
-    public RotateState(SparkFunOTOS.Pose2D currentPos, double targetHeading, RotationDirection direction) {
-        x = currentPos.x;
-        y = currentPos.y;
-        h = currentPos.h;
+    public RotateState(OdometryProvider odometryProvider, double targetHeading, RotationDirection direction) {
+        Pose2D pos = odometryProvider.getPosition();
+        x = pos.getX(odometryProvider.getDistanceUnit());
+        y = pos.getY(odometryProvider.getDistanceUnit());
+        h = pos.getHeading(odometryProvider.getAngleUnit());
         this.direction = direction;
         this.targetHeading = targetHeading;
-        yawError = calculateRotationDelta(currentPos.h, targetHeading);
+        yawError = calculateRotationDelta(this.h, targetHeading);
         isHeadingWithinRange = (Math.abs(yawError) <= ROTATE_FUDGE_FACTOR);
     }
 

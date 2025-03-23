@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.odometry.OdometryProvider;
+import org.firstinspires.ftc.teamcode.odometry.PinpointOdometryProvider;
+import org.firstinspires.ftc.teamcode.util.SleepUtils;
 
-public class Robot extends AbstractPinpointRobot {
+public class Robot extends AbstractRobot {
 
     // Motors --------------------------------------------------------
 
@@ -28,8 +29,6 @@ public class Robot extends AbstractPinpointRobot {
 
     // Sensors -------------------------------------------------------
 
-    public IMU imu = null; // BHI260AP
-
     public Rev2mDistanceSensor distanceSensor; // 'Distance Sensor'
 
     // Local variables -----------------------------------------------
@@ -41,11 +40,18 @@ public class Robot extends AbstractPinpointRobot {
     public double clawPosition = RobotPosition.CLAW_CLOSED;
     public double wristPosition = RobotPosition.WRIST_IN;
 
-
     private boolean isDriveEnabled = true;
 
+    public static OdometryProvider getDefaultOdometryProvider(HardwareMap hardwareMap, Telemetry telemetry) {
+        return new PinpointOdometryProvider("pinpoint", hardwareMap, telemetry);
+    }
+
     public Robot(HardwareMap hardwareMap, Telemetry telemetry) {
-        super(hardwareMap, telemetry);
+        super(hardwareMap, telemetry, Robot.getDefaultOdometryProvider(hardwareMap, telemetry));
+    }
+
+    public Robot(HardwareMap hardwareMap, Telemetry telemetry, OdometryProvider odometryProvider) {
+        super(hardwareMap, telemetry, odometryProvider);
     }
 
     @Override
@@ -62,13 +68,6 @@ public class Robot extends AbstractPinpointRobot {
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRightMotor");
         vsMotor = hardwareMap.get(DcMotor.class, "viperSlideMotor");
         armMotor = hardwareMap.get(DcMotor.class, "arm2");
-
-        imu = hardwareMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
-        imu.resetYaw();
 
         distanceSensor = hardwareMap.get(Rev2mDistanceSensor.class, "DistanceSensor");
 
@@ -98,9 +97,9 @@ public class Robot extends AbstractPinpointRobot {
         // Will move the "attachments" to their starting positions
         setRobotAttachmentPositions();
 
-        // Run configureHardware in parent class (which initializes sparkfun chip)
+        // Run configureHardware in parent class (which initializes odometry sensors)
         if(configureOdometry) {
-            super.configureHardware();
+            odometryProvider.configure();
         }
     }
 
@@ -183,13 +182,13 @@ public class Robot extends AbstractPinpointRobot {
         disableDriveControls();
         setWristPosition( RobotPosition.WRIST_MID );
         setViperSlidePosition( RobotPosition.VIPER_SLIDE_FULLY_EXTENDED );
-        sleep(1000);
+        SleepUtils.sleep(1000);
         setWristPosition( RobotPosition.WRIST_DOWN );
-        sleep(500);
+        SleepUtils.sleep(500);
         setClawPosition( RobotPosition.CLAW_OPEN );
-        sleep(700);
+        SleepUtils.sleep(700);
         setWristPosition( RobotPosition.WRIST_SPECIMEN );
-        sleep(500);
+        SleepUtils.sleep(500);
         setViperSlidePosition( 0 );
         enableDriveControls();
     }
@@ -200,7 +199,7 @@ public class Robot extends AbstractPinpointRobot {
         setViperSlidePosition( RobotPosition.VIPER_SLIDE_HANG_SPECIMEN );
         setWristPosition( RobotPosition.WRIST_MID );
         setArmPosition( RobotPosition.ARM_HANG_SPECIMEN );
-        sleep(850);
+        SleepUtils.sleep(850);
         enableDriveControls();
     }
 

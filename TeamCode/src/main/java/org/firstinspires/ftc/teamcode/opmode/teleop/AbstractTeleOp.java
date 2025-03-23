@@ -2,20 +2,12 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.RobotPosition;
 import org.firstinspires.ftc.teamcode.util.MovingAverageFilter;
+import org.firstinspires.ftc.teamcode.util.SleepUtils;
 
-import java.util.Locale;
-
-@SuppressWarnings("unused")
-@TeleOp(name = "Mecanum Viper Slide")
-public class MecanumDriveViperSlide extends OpMode {
+abstract class AbstractTeleOp extends OpMode {
 
     //---------------------------------------------
     // CONSTANTS
@@ -23,6 +15,7 @@ public class MecanumDriveViperSlide extends OpMode {
 
     // ARM ----------------------------------------
 
+    @SuppressWarnings("unused")
     final double[] ARM_POSITIONS = {
             RobotPosition.ARM_ORIGIN,
             RobotPosition.ARM_SUBMERSIBLE,
@@ -41,17 +34,23 @@ public class MecanumDriveViperSlide extends OpMode {
     // ARM ----------------------------------------
 
     double armPos = RobotPosition.ARM_ORIGIN; // the variable which the arm motor position will be set to
+
+    @SuppressWarnings("unused")
     int posIdx = 0; // variable to track what index of ARM_POSITIONS is being used
     int vsPos = RobotPosition.VIPER_SLIDE_ORIGIN;
 
     // variables telling whether or not the arm can be moved forward or backward
+    @SuppressWarnings("unused")
     boolean armForward = true;
+    @SuppressWarnings("unused")
     boolean armBackward = true;
 
     boolean scoringInBasket = false;
     boolean scoringOnChamber = false;
 
     double armPositionFudgeFactor = 0.0d;
+
+    protected boolean logPosition = true;
 
     MovingAverageFilter df;
 
@@ -62,16 +61,12 @@ public class MecanumDriveViperSlide extends OpMode {
     //---------------------------------------------
 
     @Override
-    public void init() {
-        robot = new Robot(hardwareMap, telemetry);
-        robot.configureHardware(true);
-        df = new MovingAverageFilter(5);
-    }
+    abstract public void init();
 
     @Override
     public void loop() {
-        // Update odometry
-        robot.odo.update();
+        // Update odometry for loop
+        robot.odometryProvider.onLoop();
 
         // Drive Functionality
         // GAMEPAD 1 : Left and Right Stick
@@ -98,8 +93,11 @@ public class MecanumDriveViperSlide extends OpMode {
         controlServos();
 
         // Log Position
-        logPosition();
+        if(logPosition) {
+            robot.odometryProvider.logPosition();
+        }
 
+        // Send Telemetry Data
         telemetry.update();
     }
 
@@ -123,13 +121,6 @@ public class MecanumDriveViperSlide extends OpMode {
         robot.setDrivePower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
     }
 
-    private void logPosition() {
-        Pose2D pos = robot.odo.getPosition();
-        String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getY(DistanceUnit.INCH), pos.getX(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
-        telemetry.addData("Position", data);
-        telemetry.addData("Status", robot.odo.getDeviceStatus());
-    }
-
     private void controlArm() {
         if( gamepad1.dpad_down ){
             armPos = RobotPosition.ARM_ORIGIN;
@@ -150,26 +141,28 @@ public class MecanumDriveViperSlide extends OpMode {
 
     private void controlViperSlide() {
 
-        boolean isWristUp = robot.wrist.getPosition() > 0.3;
-        boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > -1000;
-        boolean isArmAboveLowestPosition = robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE;
-        boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > -1450;
-
-        boolean canExtend = ((isViperSlideNotFullyExtended && isWristUp) ||
-                isArmAboveLowestPosition ||
-                (isViperSlideFullyExtended && !isWristUp));
-
         boolean canRetract = robot.vsMotor.getCurrentPosition() < 0;
 
         int VARIANCE = 50;
 
         if (gamepad2.dpad_down && canRetract ) {
             vsPos = Math.min(0, vsPos + VARIANCE);
-        } else if (gamepad2.dpad_up && canExtend ) {
+        } else if (gamepad2.dpad_up && canExtend() ) {
             vsPos = Math.max(RobotPosition.VIPER_SLIDE_FULLY_EXTENDED, vsPos - VARIANCE);
         }
 
         robot.setViperSlidePosition(vsPos);
+    }
+
+    private boolean canExtend() {
+        boolean isWristUp = robot.wrist.getPosition() > 0.3;
+        boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > -1000;
+        boolean isArmAboveLowestPosition = robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE;
+        boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > -1450;
+
+        return ((isViperSlideNotFullyExtended && isWristUp) ||
+                isArmAboveLowestPosition ||
+                (isViperSlideFullyExtended && !isWristUp));
     }
 
     private void controlServos() {
@@ -186,7 +179,7 @@ public class MecanumDriveViperSlide extends OpMode {
             {
                 vsPos = RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT;
                 robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT );
-                sleep(200);
+                SleepUtils.sleep(200);
             }
             robot.setWristPosition(RobotPosition.WRIST_MID);
         }
@@ -207,14 +200,6 @@ public class MecanumDriveViperSlide extends OpMode {
             vsPos = robot.vsMotor.getCurrentPosition();
             armPos = robot.armMotor.getCurrentPosition();
             scoringOnChamber = false;
-        }
-    }
-
-    public final void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         }
     }
 
