@@ -37,6 +37,16 @@ public class PinpointOdometryProvider extends AbstractOdometryProvider {
         pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
         /*
+         Sets the odometry pod positions relative to the point that the odometry computer tracks around.<br><br>
+         The most common tracking position is the center of the robot. <br> <br>
+         The X pod offset refers to how far sideways (in mm) from the tracking point the X (forward) odometry pod is. Left of the center is a positive number, right of center is a negative number. <br>
+         the Y pod offset refers to how far forwards (in mm) from the tracking point the Y (strafe) odometry pod is. forward of center is a positive number, backwards is a negative number.<br>
+         @param xOffset how sideways from the center of the robot is the X (forward) pod? Left increases
+         @param yOffset how far forward from the center of the robot is the Y (Strafe) pod? forward increases
+         */
+        pinpoint.setOffsets(177,19.05);
+
+        /*
         Before running the robot, recalibrate the IMU. This needs to happen when the robot is stationary
         The IMU will automatically calibrate when first powered on, but recalibrating before running
         the robot is a good idea to ensure that the calibration is "good".
