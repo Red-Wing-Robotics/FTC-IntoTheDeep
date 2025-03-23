@@ -108,8 +108,6 @@ abstract class AbstractAutoOpMode extends LinearOpMode {
 
         boolean shouldDrive = !ds.isDriveWithinRange;
 
-
-
         while(opModeIsActive() && runtime.milliseconds() < maxTimeMilliseconds && shouldDrive) {
             currentYawRadians = Math.toRadians(ds.h);
             rotY = ds.xError * Math.cos(currentYawRadians) - ds.yError * Math.sin(currentYawRadians);

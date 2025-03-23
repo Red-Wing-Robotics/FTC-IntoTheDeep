@@ -17,9 +17,6 @@ public class PinpointOdometryProvider extends AbstractOdometryProvider {
 
     @Override
     public void configure() {
-        // Determine where to fit?
-        pinpoint.setOffsets(0, 0); //these are tuned for 3110-0002-0001 Product Insight #1
-
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
         the goBILDA_SWINGARM_POD, or the goBILDA_4_BAR_POD.
@@ -27,7 +24,6 @@ public class PinpointOdometryProvider extends AbstractOdometryProvider {
         number of ticks per mm of your odometry pod.
          */
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-
 
         /*
         Set the direction that each of the two odometry pods count. The X (forward) pod should
