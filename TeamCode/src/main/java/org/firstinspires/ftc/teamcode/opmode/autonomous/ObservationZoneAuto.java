@@ -18,60 +18,68 @@ public class ObservationZoneAuto extends AbstractAutoOpMode {
 
     @Override
     void runOdometryDrive() {
+        // First Specimens
         robot.hangSpecimen();
-        autoDrive( -5, 30, 2);
+        autoDrive( -5, 28, 2);
         sleep(100);
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
         robot.setViperSlidePosition( 0 );
         sleep(500);
+        // Push Samples
         autoDrive(-5, 18,0,4);
         robot.setArmPosition( RobotPosition.ARM_ORIGIN );
         robot.setWristPosition( RobotPosition.WRIST_IN );
-        autoDrive(24, 18, 180, 5);
-        autoDrive(24, 51, 180, 2);
-        autoDrive(33, 51, 180, 1);
-        autoDrive(33, 8, 180, 2);
-        //autoDrive(33, 52, 180, 2);
-        //autoDrive(46, 52, 180, 1);
-        //autoDrive(46, 8, 180,2);
-        //autoDrive(46, 18, 180,2);
-        autoDrive(38, 29, 180, 2);
-        robot.setArmPosition(RobotPosition.ARM_SPECIMEN);
-        autoDrive(38, 10, 180,2);
-        //autoDriveDistance( 180, 280, 2);
+        autoDrive(34, 18, 0, 5);
+        autoDrive(34, 36, 0, 2);
+        autoDrive(48, -3, 180, 2);
+        autoDrive(48, 40, 180, 2);
+        autoDrive(62, 40, 180,2);
+        autoDrive(62, -1, 180, 2);
+        autoDrive(62, 20, 180, 2);
+        autoDrive(53, 20, 180, 2);
+        sleep(1000);
+        // Second Specimen
+        autoDrive(53, 14, 180, 2);
         robot.setWristPosition( RobotPosition.WRIST_MID );
+        robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_OFF_GROUND );
         sleep(750);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(200);
-        robot.setArmPosition( RobotPosition.ARM_SUBMERSIBLE2 );
+        robot.setViperSlidePosition( 0 );
+        autoDrive(-13,10,0,5);
+        robot.setArmPosition( RobotPosition.ARM_HANG_SPECIMEN );
         robot.hangSpecimen();
-        autoDrive(-7,10,0,5);
-        autoDrive(-7,31, 0,2);
-
+        autoDrive(-13,34, 0,2);
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
         robot.setViperSlidePosition( 0 );
-        robot.setWristPosition( RobotPosition.WRIST_IN );
-        autoDrive(-7,10, 0,5);
-        //robot.setArmPosition( RobotPosition.ARM_ORIGIN );
-        autoDrive(38, 18, 180, 5);
-        robot.setArmPosition(RobotPosition.ARM_SPECIMEN);
-        //robot.setClawPosition( RobotPosition.CLAW_OPEN );
-        //robot.setWristPosition( RobotPosition.WRIST_MID );
-        autoDrive(38, 10, 180, 2);
-        //autoDrive( -175, 1);
-        //autoDriveDistance( -175, 280, 2);
-        robot.setWristPosition( RobotPosition.WRIST_MID );
-        sleep(750);
+        autoDrive(-13,15, 0,5);
+        robot.setArmPosition( RobotPosition.ARM_ORIGIN );
+        // Third Specimen
+        autoDrive(53, 20, 180, 5);
+        robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_OFF_GROUND );
+        sleep(1000);
+        autoDrive(53, 13, 180, 5);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(200);
-        robot.setArmPosition( RobotPosition.ARM_SUBMERSIBLE2 );
+        autoDrive(-24, 10, 0, 2);
         robot.hangSpecimen();
-        autoDrive(-7,10,0,5);
-        autoDrive(-7,31,2);
+        autoDrive(-24, 34, 0, 2);
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
         robot.setViperSlidePosition( 0 );
-        autoDrive(-7,10,0,5);
-        autoDrive(38, 5, 0, 2);
+        autoDrive(-17,24, 0,5);
+        robot.setArmPosition( RobotPosition.ARM_ORIGIN );
+        // Fourth Specimen
+        autoDrive(50,25, 180,5);
+        robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_OFF_GROUND );
+        sleep(500);
+        robot.setClawPosition( RobotPosition.CLAW_CLOSED );
+        sleep(400);
+        robot.setViperSlidePosition( 0 );
+        autoDrive(-20, 34, 0, 2);
+        robot.hangSpecimen();
+        autoDrive(-20, 49, 0, 2);
+        robot.setClawPosition( RobotPosition.CLAW_OPEN );
+        robot.setViperSlidePosition( 0 );
     }
 
 }

@@ -5,6 +5,7 @@ public class RobotPosition {
     static public final double CLAW_CLOSED = 0.15d;
     static public final double CLAW_OPEN = 0.35d;
     static public final double CLAW_OPEN_AUTONOMOUS = 0.5;
+    static public final double CLAW_OPEN_FOURTH_SAMPLE = 0.42;
     static public final double WRIST_IN = 0.85d;
     static public final double WRIST_SPECIMEN = 0.65d;
     static public final double WRIST_MID = 0.5d;
@@ -15,7 +16,7 @@ public class RobotPosition {
     static public final int ARM_SPECIMEN = (int)(24 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_SUBMERSIBLE = (int)(32 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_SUBMERSIBLE2 = (int)(40 * ARM_TICKS_PER_DEGREE);
-    static public final int ARM_HANG_SPECIMEN = (int)(61.5 * ARM_TICKS_PER_DEGREE);
+    static public final int ARM_HANG_SPECIMEN = (int)(61 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_HIGH_RUNG = (int)(75 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_LOW_BASKET = (int)(80 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_HIGH_BASKET = (int)(110 * ARM_TICKS_PER_DEGREE);

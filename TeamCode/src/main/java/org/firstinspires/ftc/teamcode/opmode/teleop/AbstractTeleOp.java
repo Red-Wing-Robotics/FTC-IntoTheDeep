@@ -152,13 +152,14 @@ abstract class AbstractTeleOp extends OpMode {
         }
 
         robot.setViperSlidePosition(vsPos);
+        telemetry.addData("Viper Slide Position", robot.vsMotor.getCurrentPosition() );
     }
 
     private boolean canExtend() {
         boolean isWristUp = robot.wrist.getPosition() > 0.3;
-        boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > -1000;
+        boolean isViperSlideNotFullyExtended = robot.vsMotor.getCurrentPosition() > RobotPosition.VIPER_SLIDE_EXPANSION_LIMIT;
         boolean isArmAboveLowestPosition = robot.armMotor.getCurrentPosition() > 74 * RobotPosition.ARM_TICKS_PER_DEGREE;
-        boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > -1450;
+        boolean isViperSlideFullyExtended = robot.vsMotor.getCurrentPosition() > RobotPosition.VIPER_SLIDE_FULLY_EXTENDED;
 
         return ((isViperSlideNotFullyExtended && isWristUp) ||
                 isArmAboveLowestPosition ||
