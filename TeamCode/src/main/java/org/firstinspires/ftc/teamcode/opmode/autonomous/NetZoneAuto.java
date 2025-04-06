@@ -18,59 +18,51 @@ public class NetZoneAuto extends AbstractAutoOpMode {
 
     @Override
     void runOdometryDrive() {
+        // First Sample
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
-        //autoDrive(0,6,0,2);
         robot.setArmPosition( RobotPosition.ARM_HIGH_BASKET );
         autoDrive(-19,9,0,1);
         autoDrive(135,2);
         robot.scoreInHighBasket();
-        //autoDrive(-11,18,0,2);
-        //sleep(200);
-        autoDrive(-17,24,0,2);
+        // Second Sample
+        autoDrive(-18,25,0,2);
         autoDrive(0,1);
         robot.setArmPosition(RobotPosition.ARM_ORIGIN);
         robot.setClawPosition( RobotPosition.CLAW_OPEN_AUTONOMOUS );
         robot.setWristPosition( RobotPosition.WRIST_OFF_GROUND );
         sleep(400);
-        //autoDrive(-19,28,0,2);
         robot.setViperSlidePosition( 0 );
         sleep(400);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(700);
-        //robot.setViperSlidePosition( 0 );
         robot.setWristPosition( RobotPosition.WRIST_SPECIMEN );
         robot.setArmPosition( RobotPosition.ARM_HIGH_BASKET );
         autoDrive(-24,11,0,3);
         autoDrive(135,1);
         robot.scoreInHighBasket();
-
-        //autoDrive(-11,18,0,2);
-        //sleep(200);
-        autoDrive(-35,23,0,2);
+        // Third Sample
+        autoDrive(-37,21,0,2);
         autoDrive(0,1);
         robot.setArmPosition(RobotPosition.ARM_ORIGIN);
         robot.setClawPosition( RobotPosition.CLAW_OPEN_AUTONOMOUS );
         robot.setWristPosition( RobotPosition.WRIST_OFF_GROUND );
         sleep(400);
-        //autoDrive(-22,28,0,2);
         robot.setViperSlidePosition( 0 );
         sleep(400);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(700);
-        //robot.setViperSlidePosition( 0 );
         robot.setWristPosition( RobotPosition.WRIST_SPECIMEN );
         robot.setArmPosition( RobotPosition.ARM_HIGH_BASKET );
-        autoDrive(-31,10,0,2);
-        //autoDrive(-17,6,135,2);
+        autoDrive(-33,12,0,2);
         autoDrive(135,1);
         robot.scoreInHighBasket();
+        // Fourth Sample
         sleep(400);
-        autoDrive(-35,12, 0, 2);
+        autoDrive(-35,13, 0, 2);
         robot.setArmPosition(RobotPosition.ARM_SUBMERSIBLE);
         robot.setClawPosition( RobotPosition.CLAW_OPEN_FOURTH_SAMPLE );
         robot.setWristPosition( RobotPosition.WRIST_DOWN );
-
-        autoDrive(25,1);
+        autoDrive(30,1);
         sleep(300);
         robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_FULLY_EXTENDED );
         sleep(1000);
@@ -79,7 +71,7 @@ public class NetZoneAuto extends AbstractAutoOpMode {
         robot.setViperSlidePosition( 0 );
         robot.setWristPosition( RobotPosition.WRIST_SPECIMEN );
         robot.setArmPosition( RobotPosition.ARM_HIGH_BASKET );
-        autoDrive(-32,19,0,2);
+        autoDrive(-35,11,0,2);
         autoDrive(135,1);
         robot.scoreInHighBasket();
         autoDrive(0,1);

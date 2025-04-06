@@ -26,6 +26,7 @@ public class Robot extends AbstractRobot {
 
     public Servo wrist = null;
     public Servo claw = null;
+    public Servo deadWheelRetractor = null;
 
     // Sensors -------------------------------------------------------
 
@@ -39,6 +40,7 @@ public class Robot extends AbstractRobot {
     private double vsPower = 1.0d;
     public double clawPosition = RobotPosition.CLAW_CLOSED;
     public double wristPosition = RobotPosition.WRIST_IN;
+    public double deadWheelRetractorPosition =  RobotPosition.DEAD_WHEELS_DOWN;
 
     private boolean isDriveEnabled = true;
 
@@ -73,6 +75,7 @@ public class Robot extends AbstractRobot {
 
         wrist = hardwareMap.get(Servo.class, "wrist");
         claw = hardwareMap.get(Servo.class, "claw");
+        deadWheelRetractor = hardwareMap.get(Servo.class, "dead wheels");
 
         // set behavior flags for hardware
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -156,6 +159,11 @@ public class Robot extends AbstractRobot {
         wrist.setPosition(wristPosition);
     }
 
+    public void setDeadWheelRetractor(double pos){
+        deadWheelRetractorPosition = pos;
+        deadWheelRetractor.setPosition( deadWheelRetractorPosition );
+    }
+
     public void setRobotAttachmentPositions() {
         // Arm motor
         armMotor.setTargetPosition(armPosition);
@@ -170,6 +178,8 @@ public class Robot extends AbstractRobot {
 
         // Wrist
         wrist.setPosition(wristPosition);
+
+        deadWheelRetractor.setPosition( deadWheelRetractorPosition );
     }
 
     private void setViperSlidePositionWithFudgeFactor() {
@@ -198,7 +208,7 @@ public class Robot extends AbstractRobot {
         setArmPosition( RobotPosition.ARM_HANG_SPECIMEN );
         setViperSlidePosition( RobotPosition.VIPER_SLIDE_HANG_SPECIMEN );
         setWristPosition( RobotPosition.WRIST_MID );
-        setArmPosition( RobotPosition.ARM_HANG_SPECIMEN );
+        setArmPosition( RobotPosition.ARM_HANG_SPECIMEN_AUTO );
         SleepUtils.sleep(850);
         enableDriveControls();
     }

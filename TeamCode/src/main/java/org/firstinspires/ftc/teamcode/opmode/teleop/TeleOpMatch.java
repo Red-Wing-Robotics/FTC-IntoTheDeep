@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.RobotPosition;
 import org.firstinspires.ftc.teamcode.util.MovingAverageFilter;
 
 /**
@@ -24,6 +25,7 @@ public class TeleOpMatch extends AbstractTeleOp {
         robot.configureHardware(false);
         df = new MovingAverageFilter(5);
         logPosition = false;
+        robot.setDeadWheelRetractor(RobotPosition.DEAD_WHEELS_UP);
     }
 
 }
