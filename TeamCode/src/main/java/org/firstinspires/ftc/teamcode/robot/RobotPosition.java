@@ -12,7 +12,7 @@ public class RobotPosition {
     static public final double WRIST_OFF_GROUND = 0.45;
     static public final double WRIST_DOWN = 0.25d;
     static public final double DEAD_WHEELS_DOWN = 0.2;
-    static public final double DEAD_WHEELS_UP = 0.45;
+    static public final double DEAD_WHEELS_UP = 0.38;
     static public final double ARM_TICKS_PER_DEGREE = 19.791666666667;
     static public final int ARM_ORIGIN = 0;
     static public final int ARM_SPECIMEN = (int)(24 * ARM_TICKS_PER_DEGREE);
