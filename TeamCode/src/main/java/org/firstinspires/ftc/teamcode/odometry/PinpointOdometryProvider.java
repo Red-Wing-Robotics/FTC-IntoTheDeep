@@ -63,6 +63,7 @@ public class PinpointOdometryProvider extends AbstractOdometryProvider {
     @Override
     public void onLoop() {
         //pinpoint.update();
+        telemetry.addData("Pinpoint Frequency", pinpoint.getFrequency());
     }
 
 }

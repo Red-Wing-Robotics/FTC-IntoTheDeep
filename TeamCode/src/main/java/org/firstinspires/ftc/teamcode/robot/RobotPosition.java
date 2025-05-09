@@ -16,8 +16,8 @@ public class RobotPosition {
     static public final double ARM_TICKS_PER_DEGREE = 19.791666666667;
     static public final int ARM_ORIGIN = 0;
     static public final int ARM_SPECIMEN_AUTO = (int)(22 * ARM_TICKS_PER_DEGREE);
-    static public final int ARM_SPECIMEN = (int)(24 * ARM_TICKS_PER_DEGREE);
-    static public final int ARM_SUBMERSIBLE = (int)(32 * ARM_TICKS_PER_DEGREE);
+    static public final int ARM_SPECIMEN = (int)(23 * ARM_TICKS_PER_DEGREE);
+    static public final int ARM_SUBMERSIBLE = (int)(31 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_SUBMERSIBLE2 = (int)(40 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_HANG_SPECIMEN = (int)(61 * ARM_TICKS_PER_DEGREE);
     static public final int ARM_HANG_SPECIMEN_AUTO = (int)(60 * ARM_TICKS_PER_DEGREE);

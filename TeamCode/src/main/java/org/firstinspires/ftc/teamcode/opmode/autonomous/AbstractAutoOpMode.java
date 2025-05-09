@@ -48,7 +48,9 @@ abstract class AbstractAutoOpMode extends LinearOpMode {
         telemetry.update();
 
         // Execute the Autonomous Commands
-        runOdometryDrive();
+        while(opModeIsActive()) {
+            runOdometryDrive();
+        }
     }
 
     abstract void runOdometryDrive();

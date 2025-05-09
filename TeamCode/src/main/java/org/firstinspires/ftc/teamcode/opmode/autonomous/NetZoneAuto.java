@@ -25,40 +25,40 @@ public class NetZoneAuto extends AbstractAutoOpMode {
         autoDrive(135,2);
         robot.scoreInHighBasket();
         // Second Sample
-        autoDrive(-16,24,0,2);
+        autoDrive(-18,24,0,3);
         autoDrive(0,1);
         robot.setArmPosition(RobotPosition.ARM_ORIGIN);
         robot.setClawPosition( RobotPosition.CLAW_OPEN_AUTONOMOUS );
         robot.setWristPosition( RobotPosition.WRIST_OFF_GROUND );
         sleep(400);
         robot.setViperSlidePosition( 0 );
-        sleep(400);
+        sleep(700);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
         sleep(700);
         robot.setWristPosition( RobotPosition.WRIST_SPECIMEN );
         robot.setArmPosition( RobotPosition.ARM_HIGH_BASKET );
-        autoDrive(-24,11,0,3);
+        autoDrive(-25,11,0,3);
         autoDrive(135,1);
         robot.scoreInHighBasket();
         // Third Sample
-        autoDrive(-37,22,0,2);
+        autoDrive(-40,20,0,3);
         autoDrive(0,1);
         robot.setArmPosition(RobotPosition.ARM_ORIGIN);
         robot.setClawPosition( RobotPosition.CLAW_OPEN_AUTONOMOUS );
         robot.setWristPosition( RobotPosition.WRIST_OFF_GROUND );
-        sleep(400);
+        sleep(700);
         robot.setViperSlidePosition( 0 );
         sleep(400);
         robot.setClawPosition( RobotPosition.CLAW_CLOSED );
-        sleep(700);
+        sleep(900);
         robot.setWristPosition( RobotPosition.WRIST_SPECIMEN );
         robot.setArmPosition( RobotPosition.ARM_HIGH_BASKET );
-        autoDrive(-34,11,0,2);
+        autoDrive(-37,10,0,2);
         autoDrive(135,1);
         robot.scoreInHighBasket();
         // Fourth Sample
         sleep(400);
-        autoDrive(-35,14, 0, 2);
+        autoDrive(-40,11, 0, 2);
         robot.setArmPosition(RobotPosition.ARM_SUBMERSIBLE);
         robot.setClawPosition( RobotPosition.CLAW_OPEN_FOURTH_SAMPLE );
         robot.setWristPosition( RobotPosition.WRIST_DOWN );
@@ -71,7 +71,7 @@ public class NetZoneAuto extends AbstractAutoOpMode {
         robot.setViperSlidePosition( 0 );
         robot.setWristPosition( RobotPosition.WRIST_SPECIMEN );
         robot.setArmPosition( RobotPosition.ARM_HIGH_BASKET );
-        autoDrive(-36,10,0,2);
+        autoDrive(-37,16,0,2);
         autoDrive(135,1);
         robot.scoreInHighBasket();
         autoDrive(0,1);

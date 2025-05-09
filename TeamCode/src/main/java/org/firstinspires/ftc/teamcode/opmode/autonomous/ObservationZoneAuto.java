@@ -78,7 +78,8 @@ public class ObservationZoneAuto extends AbstractAutoOpMode {
         robot.setViperSlidePosition( 0 );
         autoDrive(-17,24, 0,5);
         robot.setArmPosition( RobotPosition.ARM_ORIGIN );
-        // Fourth Specimen
+        autoDrive(-60,1,180,3);
+        /* Fourth Specimen
         autoDrive(50,25, 180,5);
         robot.setViperSlidePosition( RobotPosition.VIPER_SLIDE_OFF_GROUND );
         sleep(500);
@@ -89,6 +90,6 @@ public class ObservationZoneAuto extends AbstractAutoOpMode {
         robot.hangSpecimen();
         autoDrive(-20, 38, 0, 2);
         robot.setClawPosition( RobotPosition.CLAW_OPEN );
-        robot.setViperSlidePosition( 0 );
+        robot.setViperSlidePosition( 0 ); */
     }
 }
